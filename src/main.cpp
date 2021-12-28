@@ -20,6 +20,9 @@ int main(int argc, char* argv[])
     //Create window
     RenderWindow window("Crate Escape", 1280, 720);
 
+    //Load textures
+    SDL_Texture* test_texture = window.loadTexture("res/graphics/test.png");
+
     //Game loop
     bool running = true;
     SDL_Event event;
@@ -35,6 +38,11 @@ int main(int argc, char* argv[])
                     running = false;
             }
         }
+
+        //Refresh window
+        window.clear();
+        window.render(test_texture);
+        window.display();
 
         SDL_Delay(1000/60);
     }
