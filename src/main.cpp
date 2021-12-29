@@ -2,6 +2,8 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include "RenderWindow.hpp"
+#include "Entity.hpp"
+#include "Maths.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -23,6 +25,9 @@ int main(int argc, char* argv[])
     //Load textures
     SDL_Texture* test_texture = window.loadTexture("res/graphics/test.png");
 
+    //Test entity
+    Entity test_entity(Vector2f(400, 300), test_texture, 128, 64);
+
     //Game loop
     bool running = true;
     SDL_Event event;
@@ -41,7 +46,7 @@ int main(int argc, char* argv[])
 
         //Refresh window
         window.clear();
-        window.render(test_texture);
+        window.render(test_entity);
         window.display();
 
         SDL_Delay(1000/60);
