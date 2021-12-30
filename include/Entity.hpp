@@ -10,6 +10,8 @@ class Entity
         Vector2f& getPosition();
         SDL_Texture* getTexture();
         SDL_Rect getCurrentFrame();
+        void setPosition(Vector2f position);
+        void changePosition(Vector2f delta_pos);
 
     private:
         Vector2f pos;

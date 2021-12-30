@@ -26,3 +26,14 @@ SDL_Rect Entity::getCurrentFrame()
 {
     return current_frame;
 }
+
+void Entity::setPosition(Vector2f position)
+{
+    pos = position;
+}
+
+void Entity::changePosition(Vector2f delta_pos)
+{
+    pos.x += delta_pos.x;
+    pos.y += delta_pos.y;
+}
