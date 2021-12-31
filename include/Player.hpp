@@ -4,15 +4,16 @@
 #include <iostream>
 #include <string>
 #include "Entity.hpp"
+#include "Maths.hpp"
 
 class Player: public Entity
 {
     public:
         Player(Vector2f position, SDL_Texture* player_texture, int width, int height);
         void move();
-        std::string getDirection();
         void setDirection(std::string dir);
 
     private:
         std::string direction;
+        Vector2f velocity;
 };

@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     //Load textures
     SDL_Texture* test_texture = window.loadTexture("res/graphics/test.png");
 
-    //Test player entity
+    //Player entity
     Player player(Vector2f(100, 500), test_texture, 128, 64);
 
     //Game loop
