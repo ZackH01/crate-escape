@@ -3,10 +3,6 @@
 	{
 		"selected_items":
 		[
-			[
-				"te",
-				"texture_height"
-			]
 		]
 	},
 	"build_system": "",
@@ -21,8 +17,20 @@
 		"selected_items":
 		[
 			[
-				"",
+				"package con",
 				"Package Control: Install Package"
+			],
+			[
+				"package resour",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"package control in",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Install Package Control"
 			]
 		],
 		"width": 0.0
@@ -45,26 +53,11 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Zack/GitRepos/crate-escape/src/main.cpp",
-		"/C/Users/Zack/GitRepos/crate-escape/src/renderwindow.cpp",
-		"/C/Users/Zack/GitRepos/crate-escape/include/RenderWindow.hpp",
-		"/C/Users/Zack/GitRepos/crate-escape/include/Texture.hpp",
-		"/C/Users/Zack/GitRepos/crate-escape/.gitignore",
-		"/C/Users/Zack/GitRepos/crate-escape/Crate Escape.sublime-project",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/include/Utils.hpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/include/RenderWindow.hpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/include/Maths.hpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/include/Entity.hpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/src/maths.cpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/src/main.cpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/src/entity.cpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/src/renderwindow.cpp",
-		"/C/Users/Zack/Documents/SDL2 Tutorial/SDL2 Tutorial.sublime-project",
-		"/C/Users/Zack/AppData/Roaming/Sublime Text/Packages/Default/exec.py"
+		"/C/Users/User/AppData/Roaming/Sublime Text/Packages/Default/exec.py"
 	],
 	"find":
 	{
-		"height": 27.0
+		"height": 27.2
 	},
 	"find_in_files":
 	{
@@ -78,8 +71,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"finish",
-			"def finish"
+			"debug_text"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -98,7 +90,7 @@
 	},
 	"incremental_find":
 	{
-		"height": 27.0
+		"height": 27.2
 	},
 	"input":
 	{
@@ -107,7 +99,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 126.0
+		"height": 126.400001526
 	},
 	"output.find_results":
 	{
@@ -116,7 +108,7 @@
 	"pinned_build_system": "Build Debug",
 	"replace":
 	{
-		"height": 50.0
+		"height": 51.2
 	},
 	"save_all_on_build": true,
 	"select_file":

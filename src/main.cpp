@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     SDL_Texture* test_texture = window.loadTexture("res/graphics/test.png");
 
     //Test player entity
-    Player test_player(Vector2f(100, 500), test_texture, 128, 64);
+    Player player(Vector2f(100, 500), test_texture, 128, 64);
 
     //Game loop
     bool running = true;
@@ -36,19 +36,42 @@ int main(int argc, char* argv[])
 
     while(running)
     {
-        test_player.move("right");
         while(SDL_PollEvent(&event))
         {
             switch(event.type)
             {
                 case SDL_QUIT:
                     running = false;
+                    break;
+
+                //Keyboard events
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym)
+                    {
+                        //Right arrow
+                        case SDLK_RIGHT:
+                            player.setDirection("right");
+                            break;
+
+                        //Left arrow
+                        case SDLK_LEFT:
+                            player.setDirection("left");
+                            break;
+                    }
+                    break;
+
+                case SDL_KEYUP:
+                    player.setDirection("none");
+                    break;
             }
         }
 
+        //Move entities
+        player.move();
+
         //Refresh window
         window.clear();
-        window.render(test_player);
+        window.render(player);
         window.display();
 
         SDL_Delay(1000/60);
