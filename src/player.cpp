@@ -6,14 +6,15 @@
 #include "Maths.hpp"
 #include "Player.hpp"
 
-Player::Player(Vector2f position, SDL_Texture* player_texture, int texture_width, int texture_height)
-:Entity(position, player_texture, texture_width, texture_height)
+Player::Player(Vector2f pos, SDL_Texture* player_texture, int texture_width, int texture_height)
+:Entity(pos, player_texture, texture_width, texture_height)
 {
     direction = "none";
 }
 
 void Player::move()
 {
+    //Horizontal movement
     float max_vel = 7.5f;
     float acceleration = 0.5f;
 
@@ -53,7 +54,36 @@ void Player::move()
     {
         std::cout << "Unknown direction: " << direction << std::endl;
     }
+
+    //Vertical movement
+    float gravity = 1.0f;
+    velocity.y += gravity;
+
+    //Jump
+    if(jump_input)
+    {
+        velocity.y -= 20;
+        jump_input = false;
+        can_jump = false;
+    }
+
     changePosition(velocity);
+
+    //Check collision with the floor
+    if(position.y > 632)
+    {
+        position.y = 632;
+        velocity.y = 0;
+        can_jump = true;
+    }
+}
+
+void Player::jump()
+{
+    if(can_jump)
+    {
+        jump_input = true;
+    }
 }
 
 void Player::setDirection(std::string dir)

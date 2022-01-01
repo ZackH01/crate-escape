@@ -9,11 +9,14 @@
 class Player: public Entity
 {
     public:
-        Player(Vector2f position, SDL_Texture* player_texture, int width, int height);
+        Player(Vector2f pos, SDL_Texture* player_texture, int width, int height);
         void move();
+        void jump();
         void setDirection(std::string dir);
 
     private:
         std::string direction;
         Vector2f velocity;
+        bool can_jump = false;
+        bool jump_input = false;
 };

@@ -48,6 +48,11 @@ int main(int argc, char* argv[])
                 case SDL_KEYDOWN:
                     switch(event.key.keysym.sym)
                     {
+                        //Up arrow
+                        case SDLK_UP:
+                            player.jump();
+                            break;
+
                         //Right arrow
                         case SDLK_RIGHT:
                             player.setDirection("right");
@@ -61,7 +66,18 @@ int main(int argc, char* argv[])
                     break;
 
                 case SDL_KEYUP:
-                    player.setDirection("none");
+                    switch(event.key.keysym.sym)
+                    {
+                        //Right arrow
+                        case SDLK_RIGHT:
+                            player.setDirection("none");
+                            break;
+
+                        //Left arrow
+                        case SDLK_LEFT:
+                            player.setDirection("none");
+                            break;
+                    }
                     break;
             }
         }

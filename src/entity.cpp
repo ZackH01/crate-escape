@@ -3,8 +3,8 @@
 #include "Entity.hpp"
 #include "Maths.hpp"
 
-Entity::Entity(Vector2f position, SDL_Texture* entity_texture, int texture_width, int texture_height)
-:pos(position), texture(entity_texture)
+Entity::Entity(Vector2f pos, SDL_Texture* entity_texture, int texture_width, int texture_height)
+:position(pos), texture(entity_texture)
 {
     current_frame.x = 0;
     current_frame.y = 0;
@@ -14,7 +14,7 @@ Entity::Entity(Vector2f position, SDL_Texture* entity_texture, int texture_width
 
 Vector2f& Entity::getPosition()
 {
-    return pos;
+    return position;
 }
 
 SDL_Texture* Entity::getTexture()
@@ -27,13 +27,13 @@ SDL_Rect Entity::getCurrentFrame()
     return current_frame;
 }
 
-void Entity::setPosition(Vector2f position)
+void Entity::setPosition(Vector2f pos)
 {
-    pos = position;
+    position = pos;
 }
 
 void Entity::changePosition(Vector2f delta_pos)
 {
-    pos.x += delta_pos.x;
-    pos.y += delta_pos.y;
+    position.x += delta_pos.x;
+    position.y += delta_pos.y;
 }
