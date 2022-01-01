@@ -69,10 +69,22 @@ void Player::move()
 
     changePosition(velocity);
 
-    //Check collision with the floor
-    if(position.y > 632)
+    //Check collision with left and right borders
+    if(position.x < 305)
     {
-        position.y = 632;
+        position.x = 305;
+        velocity.x = 0;
+    }
+    if(position.x > 976-getCurrentFrame().w)
+    {
+        position.x = 976-getCurrentFrame().w;
+        velocity.x = 0;
+    }
+
+    //Check collision with the floor
+    if(position.y > 696-getCurrentFrame().h)
+    {
+        position.y = 696-getCurrentFrame().h;
         velocity.y = 0;
         can_jump = true;
     }

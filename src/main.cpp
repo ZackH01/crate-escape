@@ -25,10 +25,11 @@ int main(int argc, char* argv[])
     RenderWindow window("Crate Escape", 1280, 720);
 
     //Load textures
-    SDL_Texture* test_texture = window.loadTexture("res/graphics/test.png");
+    SDL_Texture* background = window.loadTexture("res/graphics/background.png");
+    SDL_Texture* player_texture = window.loadTexture("res/graphics/player.png");
 
     //Player entity
-    Player player(Vector2f(100, 500), test_texture, 128, 64);
+    Player player(Vector2f(616, 300), player_texture, 48, 48);
 
     //Game loop
     bool running = true;
@@ -87,6 +88,7 @@ int main(int argc, char* argv[])
 
         //Refresh window
         window.clear();
+        window.render(background);
         window.render(player);
         window.display();
 
