@@ -1,7 +1,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <string>
 #include "RenderWindow.hpp"
+#include "Entity.hpp"
+#include "Maths.hpp"
+#include "Player.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -21,7 +25,11 @@ int main(int argc, char* argv[])
     RenderWindow window("Crate Escape", 1280, 720);
 
     //Load textures
-    SDL_Texture* test_texture = window.loadTexture("res/graphics/test.png");
+    SDL_Texture* background = window.loadTexture("res/graphics/background.png");
+    SDL_Texture* player_texture = window.loadTexture("res/graphics/player.png");
+
+    //Player entity
+    Player player(Vector2f(616, 300), player_texture, 48, 48);
 
     //Game loop
     bool running = true;
@@ -29,19 +37,59 @@ int main(int argc, char* argv[])
 
     while(running)
     {
-        //Check events
         while(SDL_PollEvent(&event))
         {
             switch(event.type)
             {
                 case SDL_QUIT:
                     running = false;
+                    break;
+
+                //Keyboard events
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym)
+                    {
+                        //Up arrow
+                        case SDLK_UP:
+                            player.jump();
+                            break;
+
+                        //Right arrow
+                        case SDLK_RIGHT:
+                            player.setDirection("right");
+                            break;
+
+                        //Left arrow
+                        case SDLK_LEFT:
+                            player.setDirection("left");
+                            break;
+                    }
+                    break;
+
+                case SDL_KEYUP:
+                    switch(event.key.keysym.sym)
+                    {
+                        //Right arrow
+                        case SDLK_RIGHT:
+                            player.setDirection("none");
+                            break;
+
+                        //Left arrow
+                        case SDLK_LEFT:
+                            player.setDirection("none");
+                            break;
+                    }
+                    break;
             }
         }
 
+        //Move entities
+        player.move();
+
         //Refresh window
         window.clear();
-        window.render(test_texture);
+        window.render(background);
+        window.render(player);
         window.display();
 
         SDL_Delay(1000/60);

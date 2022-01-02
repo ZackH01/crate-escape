@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include "RenderWindow.hpp"
+#include "Entity.hpp"
 
 RenderWindow::RenderWindow(const char* title, int width, int height)
 :window(NULL), renderer(NULL)
@@ -27,6 +28,25 @@ void RenderWindow::render(SDL_Texture* texture)
 {
     //Renders the given texture over the whole window
     SDL_RenderCopy(renderer, texture, NULL, NULL);
+}
+
+void RenderWindow::render(Entity& entity)
+{
+    //Texture source
+    SDL_Rect src;
+    src.x = entity.getCurrentFrame().x;
+    src.y = entity.getCurrentFrame().y;
+    src.w = entity.getCurrentFrame().w;
+    src.h = entity.getCurrentFrame().h;
+
+    //Location of render
+    SDL_Rect dst;
+    dst.x = entity.getPosition().x;
+    dst.y = entity.getPosition().y;
+    dst.w = entity.getCurrentFrame().w;
+    dst.h = entity.getCurrentFrame().h;
+
+    SDL_RenderCopy(renderer, entity.getTexture(), &src, &dst);
 }
 
 void RenderWindow::display()
