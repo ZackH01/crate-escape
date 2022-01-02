@@ -3,6 +3,10 @@
 	{
 		"selected_items":
 		[
+			[
+				"b",
+				"background"
+			]
 		]
 	},
 	"build_system": "",
@@ -59,7 +63,7 @@
 	],
 	"find":
 	{
-		"height": 27.2
+		"height": 40.0
 	},
 	"find_in_files":
 	{

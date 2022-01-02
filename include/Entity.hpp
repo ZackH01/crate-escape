@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 #include "Maths.hpp"
 
 class Entity
@@ -9,7 +10,8 @@ class Entity
         Entity(Vector2f pos, SDL_Texture* entity_texture, int texture_width, int texture_height);
         Vector2f& getPosition();
         SDL_Texture* getTexture();
-        SDL_Rect getCurrentFrame();
+        SDL_Rect getCurrentFrame(int index);
+        int getCurrentFrameLength();
         void setPosition(Vector2f position);
         void changePosition(Vector2f delta_pos);
 
@@ -18,5 +20,5 @@ class Entity
 
     private:
         SDL_Texture* texture;
-        SDL_Rect current_frame;
+        std::vector<SDL_Rect> current_frame;
 };

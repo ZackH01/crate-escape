@@ -1,15 +1,19 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 #include "Entity.hpp"
 #include "Maths.hpp"
 
 Entity::Entity(Vector2f pos, SDL_Texture* entity_texture, int texture_width, int texture_height)
 :position(pos), texture(entity_texture)
 {
-    current_frame.x = 0;
-    current_frame.y = 0;
-    current_frame.w = texture_width;
-    current_frame.h = texture_height;
+    SDL_Rect default_frame;
+    default_frame.x = 0;
+    default_frame.y = 0;
+    default_frame.w = texture_width;
+    default_frame.h = texture_height;
+
+    current_frame.push_back(default_frame);
 }
 
 Vector2f& Entity::getPosition()
@@ -22,9 +26,14 @@ SDL_Texture* Entity::getTexture()
     return texture;
 }
 
-SDL_Rect Entity::getCurrentFrame()
+SDL_Rect Entity::getCurrentFrame(int index)
 {
-    return current_frame;
+    return current_frame[index];
+}
+
+int Entity::getCurrentFrameLength()
+{
+    return current_frame.size();
 }
 
 void Entity::setPosition(Vector2f pos)

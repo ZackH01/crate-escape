@@ -6,6 +6,7 @@
 #include "Entity.hpp"
 #include "Maths.hpp"
 #include "Player.hpp"
+#include "Crate.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -27,9 +28,11 @@ int main(int argc, char* argv[])
     //Load textures
     SDL_Texture* background = window.loadTexture("res/graphics/background.png");
     SDL_Texture* player_texture = window.loadTexture("res/graphics/player.png");
+    SDL_Texture* crate_texture = window.loadTexture("res/graphics/crate.png");
 
-    //Player entity
-    Player player(Vector2f(616, 300), player_texture, 48, 48);
+    //Entities
+    Player player(Vector2f(616, 720), player_texture, 48, 48);
+    Crate test_crate(crate_texture, 48, 48);
 
     //Game loop
     bool running = true;
@@ -90,6 +93,7 @@ int main(int argc, char* argv[])
         window.clear();
         window.render(background);
         window.render(player);
+        //window.render(test_crate);
         window.display();
 
         SDL_Delay(1000/60);
