@@ -15,7 +15,7 @@ Player::Player(Vector2f pos, SDL_Texture* player_texture, int texture_width, int
 void Player::move()
 {
     //Horizontal movement
-    float max_vel = 7.5f;
+    float max_vel = 5.5f;
     float acceleration = 0.5f;
 
     if(direction == "none")
@@ -56,13 +56,22 @@ void Player::move()
     }
 
     //Vertical movement
-    float gravity = 1.0f;
+    float gravity;
+    if(velocity.y < 0)
+    {
+        gravity = 0.8f;
+    }
+    else
+    {
+        //Stronger gravity when falling
+        gravity = 1.0f;
+    }
     velocity.y += gravity;
 
     //Jump
     if(jump_input)
     {
-        velocity.y -= 20;
+        velocity.y -= 15.75f;
         jump_input = false;
         can_jump = false;
     }
@@ -70,21 +79,21 @@ void Player::move()
     changePosition(velocity);
 
     //Check collision with left and right borders
-    if(position.x < 305)
+    if(position.x < 401)
     {
-        position.x = 305;
+        position.x = 401;
         velocity.x = 0;
     }
-    if(position.x > 976-getCurrentFrame(0).w)
+    if(position.x > 880-getCurrentFrame(0).w)
     {
-        position.x = 976-getCurrentFrame(0).w;
+        position.x = 880-getCurrentFrame(0).w;
         velocity.x = 0;
     }
 
     //Check collision with the floor
-    if(position.y > 696-getCurrentFrame(0).h)
+    if(position.y > 688-getCurrentFrame(0).h)
     {
-        position.y = 696-getCurrentFrame(0).h;
+        position.y = 688-getCurrentFrame(0).h;
         velocity.y = 0;
         can_jump = true;
     }

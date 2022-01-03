@@ -31,8 +31,8 @@ int main(int argc, char* argv[])
     SDL_Texture* crate_texture = window.loadTexture("res/graphics/crate.png");
 
     //Entities
-    Player player(Vector2f(616, 720), player_texture, 48, 48);
-    Crate test_crate(crate_texture, 48, 48);
+    Player player(Vector2f(616, 720), player_texture, 32, 32);
+    Crate test_crate(crate_texture, 32, 32);
 
     //Game loop
     bool running = true;
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
         window.clear();
         window.render(background);
         window.render(player);
-        //window.render(test_crate);
+        window.render(test_crate);
         window.display();
 
         SDL_Delay(1000/60);
