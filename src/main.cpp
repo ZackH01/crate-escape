@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 
     //Entities
     Player player(Vector2f(616, 720), player_texture, 32, 32);
-    Crate test_crate(crate_texture, 32, 32);
+    Crate test_crate(crate_texture, 32, 32, 3, 2);
 
     //Game loop
     bool running = true;

@@ -84,16 +84,16 @@ void Player::move()
         position.x = 401;
         velocity.x = 0;
     }
-    if(position.x > 880-getCurrentFrame(0).w)
+    if(position.x > 880-getCurrentFrame().first.w)
     {
-        position.x = 880-getCurrentFrame(0).w;
+        position.x = 880-getCurrentFrame().first.w;
         velocity.x = 0;
     }
 
     //Check collision with the floor
-    if(position.y > 688-getCurrentFrame(0).h)
+    if(position.y > 688-getCurrentFrame().first.h)
     {
-        position.y = 688-getCurrentFrame(0).h;
+        position.y = 688-getCurrentFrame().first.h;
         velocity.y = 0;
         can_jump = true;
     }

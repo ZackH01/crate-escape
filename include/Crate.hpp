@@ -6,9 +6,9 @@
 
 class Crate: public Entity
 {
-	public:
-		Crate(SDL_Texture* crate_texture, int width, int height);
+    public:
+        Crate(SDL_Texture* crate_texture, int tile_width, int tile_height, int crate_width, int crate_height);
 
-	private:
+    private:
 
 };

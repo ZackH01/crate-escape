@@ -34,19 +34,15 @@ void RenderWindow::render(Entity& entity)
 {
     for(int i=0; i < entity.getCurrentFrameLength(); i++)
     {
-        //Texture source
-        SDL_Rect src;
-        src.x = entity.getCurrentFrame(i).x;
-        src.y = entity.getCurrentFrame(i).y;
-        src.w = entity.getCurrentFrame(i).w;
-        src.h = entity.getCurrentFrame(i).h;
+        //Texture source of each tile in the frame
+        SDL_Rect src = entity.getCurrentFrame(i).first;
 
-        //Location of render
+        //Location of the render of each tile in the frame relative to the entity's position
         SDL_Rect dst;
-        dst.x = entity.getPosition().x + entity.getCurrentFrame(i).x;
-        dst.y = entity.getPosition().y + entity.getCurrentFrame(i).y;
-        dst.w = entity.getCurrentFrame(i).w;
-        dst.h = entity.getCurrentFrame(i).h;
+        dst.x = entity.getPosition().x + entity.getCurrentFrame(i).second.x;
+        dst.y = entity.getPosition().y + entity.getCurrentFrame(i).second.y;
+        dst.w = entity.getCurrentFrame(i).first.w;
+        dst.h = entity.getCurrentFrame(i).first.h;
 
         SDL_RenderCopy(renderer, entity.getTexture(), &src, &dst);
     }

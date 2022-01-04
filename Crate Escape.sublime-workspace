@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"t",
+				"tile_height"
+			],
+			[
+				"get",
+				"getCurrentFrame"
+			],
+			[
+				"pos",
+				"pos_offset"
+			],
+			[
+				"x",
+				"x_offset"
+			],
+			[
+				"ge",
+				"getCurrentFrame"
+			],
+			[
+				"def",
+				"default_tile_src"
+			],
+			[
+				"d",
+				"default_tile_dst_offset"
+			],
+			[
+				"tile",
+				"tile_height"
+			],
+			[
 				"b",
 				"background"
 			]
@@ -57,6 +89,13 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Zack/GitRepos/crate-escape/include/RenderWindow.hpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/player.cpp",
+		"/C/Users/Zack/GitRepos/crate-escape/include/Player.hpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/renderwindow.cpp",
+		"/C/Users/Zack/GitRepos/crate-escape/include/Maths.hpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/maths.cpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/entity.cpp",
 		"/C/Users/User/GitRepos/crate-escape/src/maths.cpp",
 		"/C/Users/User/GitRepos/crate-escape/include/Maths.hpp",
 		"/C/Users/User/AppData/Roaming/Sublime Text/Packages/Default/exec.py"
