@@ -31,8 +31,8 @@ int main(int argc, char* argv[])
     SDL_Texture* crate_texture = window.loadTexture("res/graphics/crate.png");
 
     //Entities
-    Player player(Vector2f(616, 720), player_texture, 32, 32);
-    Crate test_crate(crate_texture, 32, 32, 3, 2);
+    Player player(player_texture);
+    Crate test_crate(crate_texture, 3, 2);
 
     //Game loop
     bool running = true;

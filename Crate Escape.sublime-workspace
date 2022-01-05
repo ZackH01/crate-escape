@@ -4,8 +4,24 @@
 		"selected_items":
 		[
 			[
+				"crate",
+				"crate_width"
+			],
+			[
+				"e_",
+				"e_width"
+			],
+			[
+				"te",
+				"texture"
+			],
+			[
 				"t",
-				"tile_height"
+				"t_width"
+			],
+			[
+				"tex",
+				"texture_width"
 			],
 			[
 				"get",

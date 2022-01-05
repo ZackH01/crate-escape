@@ -4,16 +4,16 @@
 #include "Crate.hpp"
 #include "Maths.hpp"
 
-Crate::Crate(SDL_Texture* crate_texture, int tile_width, int tile_height, int crate_width, int crate_height)
-:Entity(Vector2f(), crate_texture, tile_width, tile_height)
+Crate::Crate(SDL_Texture* crate_texture, int crate_width, int crate_height)
+:Entity(crate_texture, Vector2f(), crate_width*32, crate_height*32, 32, 32)
 {
     position.x = 528;
     position.y = 560;
 
-    //Validate crate width and height (Min = 2x2, max = 4x4)
-    if(crate_width < 2 || crate_width > 4 || crate_height < 2 || crate_width > 4)
+    //Validate crate width and height
+    if(crate_width < 1 || crate_width < 1)
     {
-        std::cout << "Error: crate width and height should be between 2 and 4 (inclusive)!" << std::endl;
+        std::cout << "Error: crate width and height must be 1 or greater!" << std::endl;
         return;
     }
 
@@ -41,12 +41,6 @@ Crate::Crate(SDL_Texture* crate_texture, int tile_width, int tile_height, int cr
 
         for(int j = 0; j < crate_height; j++)
         {
-            //Move on as this tile is already in the texture
-            if(i == 0 && j == 0)
-            {
-                continue;
-            }
-
             //Top tile
             if(j == 0)
             {
@@ -63,7 +57,7 @@ Crate::Crate(SDL_Texture* crate_texture, int tile_width, int tile_height, int cr
                 tile_offset_y = 1;
             }
 
-            addTileToCurrentFrame(tile_offset_x*tile_width, tile_offset_y*tile_height, i*tile_width, j*tile_height);
+            addTileToCurrentFrame(tile_offset_x*32, tile_offset_y*32, i*32, j*32);
         }
     }
 }

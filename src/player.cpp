@@ -6,8 +6,8 @@
 #include "Maths.hpp"
 #include "Player.hpp"
 
-Player::Player(Vector2f pos, SDL_Texture* player_texture, int texture_width, int texture_height)
-:Entity(pos, player_texture, texture_width, texture_height)
+Player::Player(SDL_Texture* player_texture)
+:Entity(player_texture, Vector2f(616, 720), 32, 32)
 {
     direction = "none";
 }
@@ -84,16 +84,16 @@ void Player::move()
         position.x = 401;
         velocity.x = 0;
     }
-    if(position.x > 880-getCurrentFrame().first.w)
+    if(position.x > 880-getWidth())
     {
-        position.x = 880-getCurrentFrame().first.w;
+        position.x = 880-getWidth();
         velocity.x = 0;
     }
 
     //Check collision with the floor
-    if(position.y > 688-getCurrentFrame().first.h)
+    if(position.y > 688-getHeight())
     {
-        position.y = 688-getCurrentFrame().first.h;
+        position.y = 688-getHeight();
         velocity.y = 0;
         can_jump = true;
     }

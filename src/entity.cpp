@@ -4,21 +4,26 @@
 #include "Entity.hpp"
 #include "Maths.hpp"
 
-Entity::Entity(Vector2f pos, SDL_Texture* entity_texture, int texture_width, int texture_height)
-:position(pos), texture(entity_texture), current_frame(0)
+Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height, int t_width, int t_height)
+:position(pos), texture(e_texture)
 {
-    //Adds first tile in the texture to the initial frame
-    SDL_Rect default_tile_src;
-    default_tile_src.x = 0;
-    default_tile_src.y = 0;
-    default_tile_src.w = texture_width;
-    default_tile_src.h = texture_height;
+    //Constructor with no initial frame
+    size.w = e_width;
+    size.h = e_height;
+    tile_size.w = t_width;
+    tile_size.h = t_height;
+}
 
-    Vector2f default_tile_dst_offset;
-    default_tile_dst_offset.x = 0;
-    default_tile_dst_offset.y = 0;
+Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height)
+:position(pos), texture(e_texture)
+{
+    //Constructor with initial frame
+    size.w = e_width;
+    size.h = e_height;
+    tile_size.w = e_width;
+    tile_size.h = e_height;
 
-    current_frame.push_back(std::make_pair(default_tile_src, default_tile_dst_offset));
+    addTileToCurrentFrame(0, 0, 0, 0);
 }
 
 Vector2f& Entity::getPosition()
@@ -42,6 +47,16 @@ SDL_Texture* Entity::getTexture()
     return texture;
 }
 
+int& Entity::getWidth()
+{
+    return size.w;
+}
+
+int& Entity::getHeight()
+{
+    return size.h;
+}
+
 std::pair<SDL_Rect, Vector2f>& Entity::getCurrentFrame(int index)
 {
     return current_frame[index];
@@ -57,8 +72,8 @@ void Entity::addTileToCurrentFrame(int tile_x, int tile_y, int x_offset, int y_o
     SDL_Rect tile;
     tile.x = tile_x;
     tile.y = tile_y;
-    tile.w = getCurrentFrame().first.w;
-    tile.h = getCurrentFrame().first.h;
+    tile.w = tile_size.w;
+    tile.h = tile_size.h;
 
     Vector2f pos_offset;
     pos_offset.x = x_offset;
