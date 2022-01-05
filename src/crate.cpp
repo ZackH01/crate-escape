@@ -23,8 +23,13 @@ Crate::Crate(SDL_Texture* crate_texture, int crate_width, int crate_height)
 
     for(int i = 0; i < crate_width; i++)
     {
+        //Tile for width of 1
+        if(crate_width == 1)
+        {
+            tile_offset_x = 3;
+        }
         //Left tile
-        if(i == 0)
+        else if(i == 0)
         {
             tile_offset_x = 0;
         }
@@ -41,8 +46,13 @@ Crate::Crate(SDL_Texture* crate_texture, int crate_width, int crate_height)
 
         for(int j = 0; j < crate_height; j++)
         {
+            //Tile for height of 1
+            if(crate_height == 1)
+            {
+                tile_offset_y = 3;
+            }
             //Top tile
-            if(j == 0)
+            else if(j == 0)
             {
                 tile_offset_y = 0;
             }
