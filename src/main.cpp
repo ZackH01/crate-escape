@@ -32,7 +32,8 @@ int main(int argc, char* argv[])
 
     //Entities
     Player player(player_texture);
-    Crate test_crate(crate_texture, 1, 3);
+    std::vector<Crate> crates;
+    crates.push_back(Crate(crate_texture, 4, 2));
 
     //Game loop
     bool running = true;
@@ -87,22 +88,16 @@ int main(int argc, char* argv[])
         }
 
         //Move entities
-        player.move();
-
-        if(player.checkCollision(test_crate))
-        {
-            std::cout << "oof" << std::endl;
-        }
-        else
-        {
-            std::cout << "nope" << std::endl;
-        }
+        player.move(crates);
 
         //Refresh window
         window.clear();
         window.render(background);
         window.render(player);
-        window.render(test_crate);
+        for(Entity& c: crates)
+        {
+            window.render(c);
+        }
         window.display();
 
         SDL_Delay(1000/60);

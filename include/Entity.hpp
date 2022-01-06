@@ -17,7 +17,8 @@ class Entity
         int& getHeight();
         std::pair<SDL_Rect, Vector2f>& getCurrentFrame(int index = 0);
         int getCurrentFrameLength();
-        HitboxRect& getHitbox();
+        HitboxRect& getHitboxSize();
+        HitboxRect getHitbox();
         bool checkCollision(Entity& entity);
 
     protected:

@@ -95,9 +95,20 @@ void Entity::addTileToCurrentFrame(int tile_x, int tile_y, int x_offset, int y_o
     current_frame.push_back(std::make_pair(tile, pos_offset));
 }
 
-HitboxRect& Entity::getHitbox()
+HitboxRect& Entity::getHitboxSize()
 {
     return hitbox;
+}
+
+HitboxRect Entity::getHitbox()
+{
+    HitboxRect hb = hitbox;
+    hb.x1 += position.x;
+    hb.y1 += position.y;
+    hb.x2 += position.x;
+    hb.y2 += position.y;
+
+    return hb;
 }
 
 void Entity::setHitbox(float x_offset, float y_offset, float width, float height)
@@ -111,19 +122,10 @@ void Entity::setHitbox(float x_offset, float y_offset, float width, float height
 bool Entity::checkCollision(Entity& entity)
 {
     //Your hitbox
-    HitboxRect yhb = hitbox;
-    yhb.x1 += position.x;
-    yhb.y1 += position.y;
-    yhb.x2 += position.x;
-    yhb.y2 += position.y;
+    HitboxRect yhb = getHitbox();
 
     //Hitbox of the entity you are checking collision with
     HitboxRect ehb = entity.getHitbox();
-    Vector2f epos = entity.getPosition();
-    ehb.x1 += epos.x;
-    ehb.y1 += epos.y;
-    ehb.x2 += epos.x;
-    ehb.y2 += epos.y;
 
     //Check if the hitboxes overlap
     if(yhb.x1 < ehb.x2 && yhb.x2 > ehb.x1 && yhb.y1 < ehb.y2 && yhb.y2 > ehb.y1)
