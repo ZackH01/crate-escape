@@ -17,9 +17,12 @@ class Entity
         int& getHeight();
         std::pair<SDL_Rect, Vector2f>& getCurrentFrame(int index = 0);
         int getCurrentFrameLength();
+        HitboxRect& getHitbox();
+        bool checkCollision(Entity& entity);
 
     protected:
         void addTileToCurrentFrame(int tile_x, int tile_y, int x_offset, int y_offset);
+        void setHitbox(float x_offset, float y_offset, float width, float height);
         Vector2f position;
 
     private:
@@ -27,4 +30,5 @@ class Entity
         EntDim size;
         EntDim tile_size;
         std::vector<std::pair<SDL_Rect, Vector2f>> current_frame;
+        HitboxRect hitbox;
 };

@@ -11,3 +11,7 @@ Vector2f::Vector2f(float x_pos, float y_pos)
 EntDim::EntDim()
 :w(0), h(0)
 {}
+
+HitboxRect::HitboxRect()
+:x1(0), y1(0), x2(0), y2(0)
+{}

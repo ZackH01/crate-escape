@@ -89,6 +89,15 @@ int main(int argc, char* argv[])
         //Move entities
         player.move();
 
+        if(player.checkCollision(test_crate))
+        {
+            std::cout << "oof" << std::endl;
+        }
+        else
+        {
+            std::cout << "nope" << std::endl;
+        }
+
         //Refresh window
         window.clear();
         window.render(background);
