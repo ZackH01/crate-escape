@@ -1,22 +1,35 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 #include "Maths.hpp"
 
 class Entity
 {
     public:
-        Entity(Vector2f pos, SDL_Texture* entity_texture, int texture_width, int texture_height);
+        Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height, int t_width, int t_height);
+        Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height);
         Vector2f& getPosition();
-        SDL_Texture* getTexture();
-        SDL_Rect getCurrentFrame();
         void setPosition(Vector2f position);
         void changePosition(Vector2f delta_pos);
+        SDL_Texture* getTexture();
+        int& getWidth();
+        int& getHeight();
+        std::pair<SDL_Rect, Vector2f>& getCurrentFrame(int index = 0);
+        int getCurrentFrameLength();
+        HitboxRect& getHitboxSize();
+        HitboxRect getHitbox();
+        bool checkCollision(Entity& entity);
 
     protected:
+        void addTileToCurrentFrame(int tile_x, int tile_y, int x_offset, int y_offset);
+        void setHitbox(float x_offset, float y_offset, float width, float height);
         Vector2f position;
 
     private:
         SDL_Texture* texture;
-        SDL_Rect current_frame;
+        EntDim size;
+        EntDim tile_size;
+        std::vector<std::pair<SDL_Rect, Vector2f>> current_frame;
+        HitboxRect hitbox;
 };

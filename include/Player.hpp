@@ -3,20 +3,23 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Entity.hpp"
 #include "Maths.hpp"
+#include "Crate.hpp"
 
 class Player: public Entity
 {
     public:
-        Player(Vector2f pos, SDL_Texture* player_texture, int width, int height);
-        void move();
+        Player(SDL_Texture* player_texture);
+        void move(std::vector<Crate>& crate_vect);
         void jump();
         void setDirection(std::string dir);
 
     private:
         std::string direction;
         Vector2f velocity;
+        float current_crate_velocity;
         bool can_jump = false;
         bool jump_input = false;
 };

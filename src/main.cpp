@@ -6,6 +6,7 @@
 #include "Entity.hpp"
 #include "Maths.hpp"
 #include "Player.hpp"
+#include "Crate.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -27,13 +28,16 @@ int main(int argc, char* argv[])
     //Load textures
     SDL_Texture* background = window.loadTexture("res/graphics/background.png");
     SDL_Texture* player_texture = window.loadTexture("res/graphics/player.png");
+    SDL_Texture* crate_texture = window.loadTexture("res/graphics/crate.png");
 
-    //Player entity
-    Player player(Vector2f(616, 300), player_texture, 48, 48);
+    //Entities
+    Player player(player_texture);
+    std::vector<Crate> crates;
 
     //Game loop
     bool running = true;
     SDL_Event event;
+    int time;
 
     while(running)
     {
@@ -83,15 +87,30 @@ int main(int argc, char* argv[])
             }
         }
 
+        //Add extra crates
+        if(time % 300 == 0)
+        {
+            crates.push_back(Crate(crate_texture, 3, 3));
+        }
+
         //Move entities
-        player.move();
+        player.move(crates);
+        for(Crate& c: crates)
+        {
+            c.move(crates);
+        }
 
         //Refresh window
         window.clear();
         window.render(background);
         window.render(player);
+        for(Entity& c: crates)
+        {
+            window.render(c);
+        }
         window.display();
 
+        time++;
         SDL_Delay(1000/60);
     }
 
