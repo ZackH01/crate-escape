@@ -33,11 +33,11 @@ int main(int argc, char* argv[])
     //Entities
     Player player(player_texture);
     std::vector<Crate> crates;
-    crates.push_back(Crate(crate_texture, 4, 2));
 
     //Game loop
     bool running = true;
     SDL_Event event;
+    int time;
 
     while(running)
     {
@@ -87,8 +87,18 @@ int main(int argc, char* argv[])
             }
         }
 
+        //Add extra crates
+        if(time % 300 == 0)
+        {
+            crates.push_back(Crate(crate_texture, 3, 3));
+        }
+
         //Move entities
         player.move(crates);
+        for(Crate& c: crates)
+        {
+            c.move(crates);
+        }
 
         //Refresh window
         window.clear();
@@ -100,6 +110,7 @@ int main(int argc, char* argv[])
         }
         window.display();
 
+        time++;
         SDL_Delay(1000/60);
     }
 

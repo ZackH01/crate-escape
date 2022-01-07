@@ -148,14 +148,15 @@ void Player::move(std::vector<Crate>& crate_vect)
             if(phb.y2 > chb.y1 && phb.y1 < chb.y1)
             {
                 position.y = chb.y1-getHeight();
-                velocity.y = 0;
+                velocity.y = crate.getFallVelocity();
+                current_crate_velocity = crate.getFallVelocity();
                 can_jump = true;
             }
             //Touched bottom of crate
             else if(phb.y1 < chb.y2 && phb.y2 > chb.y2)
             {
-                position.y = chb.y2;
-                velocity.y = 0;
+                position.y = chb.y2+crate.getFallVelocity();
+                velocity.y = crate.getFallVelocity();
             }
         }
     }
@@ -163,7 +164,7 @@ void Player::move(std::vector<Crate>& crate_vect)
 
 void Player::jump()
 {
-    if(can_jump && velocity.y == 0)
+    if(can_jump && (velocity.y == 0 || velocity.y == current_crate_velocity))
     {
         jump_input = true;
     }

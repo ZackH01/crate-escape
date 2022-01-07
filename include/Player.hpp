@@ -19,6 +19,7 @@ class Player: public Entity
     private:
         std::string direction;
         Vector2f velocity;
+        float current_crate_velocity;
         bool can_jump = false;
         bool jump_input = false;
 };
