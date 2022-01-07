@@ -3,15 +3,15 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
-#include "Crate.hpp"
 #include "Maths.hpp"
+#include "Crate.hpp"
 
 Crate::Crate(SDL_Texture* crate_texture, int crate_width, int crate_height)
-:Entity(crate_texture, Vector2f(), crate_width*32, crate_height*32, 32, 32), falling(true), fall_velocity(0)
+:Entity(crate_texture, Vector2f(), crate_width*32, crate_height*32, 32, 32)
 {
     while(position.x < 400 || position.x > 880-getWidth())
     {
-        position.x = (std::rand()%14-crate_width)*32 + 464;
+        position.x = (std::rand()%15)*32 + 400;
     }
     position.y = -getHeight();
 
@@ -82,7 +82,7 @@ void Crate::move(std::vector<Crate>& crate_vect)
     if(falling)
     {
         //Move down
-        float gravity = 0.5f;
+        float gravity = 0.25f;
         float max_vel = 4.0f;
 
         if(fall_velocity < max_vel)

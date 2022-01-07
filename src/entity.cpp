@@ -1,9 +1,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <vector>
 #include <iostream>
-#include "Entity.hpp"
+#include <vector>
 #include "Maths.hpp"
+#include "Entity.hpp"
 
 Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height, int t_width, int t_height)
 :position(pos), texture(e_texture)

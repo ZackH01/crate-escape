@@ -2,9 +2,10 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "RenderWindow.hpp"
-#include "Entity.hpp"
 #include "Maths.hpp"
+#include "Entity.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 
@@ -88,17 +89,17 @@ int main(int argc, char* argv[])
         }
 
         //Add extra crates
-        if(time % 300 == 0)
+        if(time % 30 == 0)
         {
-            crates.push_back(Crate(crate_texture, 3, 3));
+            crates.push_back(Crate(crate_texture, 1, 1));
         }
 
         //Move entities
-        player.move(crates);
         for(Crate& c: crates)
         {
             c.move(crates);
         }
+        player.move(crates);
 
         //Refresh window
         window.clear();

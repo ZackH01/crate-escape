@@ -1,11 +1,10 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <iostream>
 #include <string>
 #include <vector>
-#include "Entity.hpp"
 #include "Maths.hpp"
+#include "Entity.hpp"
 #include "Crate.hpp"
 
 class Player: public Entity

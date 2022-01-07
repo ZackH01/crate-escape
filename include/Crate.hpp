@@ -2,8 +2,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <vector>
-#include "Entity.hpp"
 #include "Maths.hpp"
+#include "Entity.hpp"
 
 class Crate: public Entity
 {
@@ -13,6 +13,6 @@ class Crate: public Entity
         float& getFallVelocity();
 
     private:
-        bool falling;
-        float fall_velocity;
+        bool falling = true;
+        float fall_velocity = 0;
 };

@@ -3,10 +3,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Entity.hpp"
 #include "Maths.hpp"
-#include "Crate.hpp"
 #include "Player.hpp"
+#include "Crate.hpp"
 
 Player::Player(SDL_Texture* player_texture)
 :Entity(player_texture, Vector2f(616, 720), 32, 32)
@@ -17,7 +16,7 @@ Player::Player(SDL_Texture* player_texture)
 void Player::move(std::vector<Crate>& crate_vect)
 {
     //Horizontal movement
-    float max_vel = 5.5f;
+    float max_vel = 5.0f;
     float acceleration = 0.5f;
 
     if(direction == "none")
@@ -61,9 +60,9 @@ void Player::move(std::vector<Crate>& crate_vect)
     changePosition(Vector2f(velocity.x, 0));
 
     //Check collision with left and right borders
-    if(position.x < 401)
+    if(position.x < 400)
     {
-        position.x = 401;
+        position.x = 400;
         velocity.x = 0;
     }
     if(position.x > 880-getWidth())
@@ -117,7 +116,7 @@ void Player::move(std::vector<Crate>& crate_vect)
     //Jump
     if(jump_input)
     {
-        velocity.y = -15.75f;
+        velocity.y = -15.0f;
         jump_input = false;
         can_jump = false;
     }
