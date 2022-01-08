@@ -3,6 +3,14 @@
 	{
 		"selected_items":
 		[
+			[
+				"c",
+				"crate_height"
+			],
+			[
+				"cr",
+				"crate_width"
+			]
 		]
 	},
 	"build_system": "",

@@ -9,6 +9,7 @@ class RenderWindow
         RenderWindow(const char* title, int width, int height);
         SDL_Texture* loadTexture(const char* file_path);
         void render(SDL_Texture* texture);
+        void render(SDL_Texture* texture, int x1, int y1, int x2, int y2);
         void render(Entity& entity);
         void display();
         void clear();

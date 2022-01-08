@@ -14,11 +14,13 @@ class Player: public Entity
         void move(std::vector<Crate>& crate_vect);
         void jump();
         void setDirection(std::string dir);
+        bool& isGameOver();
 
     private:
         std::string direction;
         Vector2f velocity;
         float current_crate_velocity;
-        bool can_jump = false;
-        bool jump_input = false;
+        bool can_jump;
+        bool jump_input;
+        bool game_over;
 };
