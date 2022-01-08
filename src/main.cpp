@@ -3,14 +3,137 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 #include "RenderWindow.hpp"
 #include "Maths.hpp"
 #include "Entity.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 
+RenderWindow window("Crate Escape", 1280, 720);
+SDL_Texture* background;
+SDL_Texture* player_texture;
+SDL_Texture* crate_texture;
+
+Player player(player_texture);
+std::vector<Crate> crates;
+
+bool running;
+SDL_Event event;
+int time;
+
+void loadTextures()
+{
+    background = window.loadTexture("res/graphics/background.png");
+    player_texture = window.loadTexture("res/graphics/player.png");
+    crate_texture = window.loadTexture("res/graphics/crate.png");
+}
+
+void resetGame()
+{
+    player = Player(player_texture);
+    crates.clear();
+}
+
+void addCrate()
+{
+    //Frequency of the sizes of crates
+    int crate_widths[10] = {1, 2, 2, 2, 3, 3, 3, 3, 4, 4};
+    int crate_heights[10] = {1, 2, 2, 2, 2, 3, 3, 3, 3, 4};
+
+    crates.push_back(Crate(crate_texture, crate_widths[std::rand()%10], crate_heights[std::rand()%10]));
+}
+
+void update()
+{
+    //Add extra crates
+    if(time % 120 == 0)
+    {
+        addCrate();
+    }
+
+    //Move entities
+    for(Crate& c: crates)
+    {
+        c.move(crates);
+    }
+    player.move(crates);
+
+    //Refresh window
+    window.clear();
+    window.render(background);
+    window.render(player);
+    for(Entity& c: crates)
+    {
+        window.render(c);
+    }
+
+    window.display();
+
+    //Check for game reset
+    if(player.isGameOver())
+    {
+        resetGame();
+    }
+}
+
+void handleEvents()
+{
+    while(SDL_PollEvent(&event))
+    {
+        switch(event.type)
+        {
+            case SDL_QUIT:
+                running = false;
+                break;
+
+            //Keyboard events
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym)
+                {
+                    //Up arrow - jump
+                    case SDLK_UP:
+                        player.jump();
+                        break;
+
+                    //Right arrow - move right
+                    case SDLK_RIGHT:
+                        player.setDirection("right");
+                        break;
+
+                    //Left arrow - move left
+                    case SDLK_LEFT:
+                        player.setDirection("left");
+                        break;
+
+                    //R key - reset game
+                    case SDLK_r:
+                        resetGame();
+                        break;
+                }
+                break;
+
+            case SDL_KEYUP:
+                switch(event.key.keysym.sym)
+                {
+                    //Right arrow
+                    case SDLK_RIGHT:
+                        player.setDirection("none");
+                        break;
+
+                    //Left arrow
+                    case SDLK_LEFT:
+                        player.setDirection("none");
+                        break;
+                }
+                break;
+        }
+    }
+}
+
 int main(int argc, char* argv[])
 {
+    //Initialise SDL
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "SDL Init failed. Error: " << SDL_GetError() << std::endl;
@@ -23,93 +146,18 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    //Create window
-    RenderWindow window("Crate Escape", 1280, 720);
+    //Initialise game
+    loadTextures();
+    resetGame();
 
-    //Load textures
-    SDL_Texture* background = window.loadTexture("res/graphics/background.png");
-    SDL_Texture* player_texture = window.loadTexture("res/graphics/player.png");
-    SDL_Texture* crate_texture = window.loadTexture("res/graphics/crate.png");
+    running = true;
+    time = 0;
 
-    //Entities
-    Player player(player_texture);
-    std::vector<Crate> crates;
-
-    //Game loop
-    bool running = true;
-    SDL_Event event;
-    int time;
-
+    //Event loop
     while(running)
     {
-        while(SDL_PollEvent(&event))
-        {
-            switch(event.type)
-            {
-                case SDL_QUIT:
-                    running = false;
-                    break;
-
-                //Keyboard events
-                case SDL_KEYDOWN:
-                    switch(event.key.keysym.sym)
-                    {
-                        //Up arrow
-                        case SDLK_UP:
-                            player.jump();
-                            break;
-
-                        //Right arrow
-                        case SDLK_RIGHT:
-                            player.setDirection("right");
-                            break;
-
-                        //Left arrow
-                        case SDLK_LEFT:
-                            player.setDirection("left");
-                            break;
-                    }
-                    break;
-
-                case SDL_KEYUP:
-                    switch(event.key.keysym.sym)
-                    {
-                        //Right arrow
-                        case SDLK_RIGHT:
-                            player.setDirection("none");
-                            break;
-
-                        //Left arrow
-                        case SDLK_LEFT:
-                            player.setDirection("none");
-                            break;
-                    }
-                    break;
-            }
-        }
-
-        //Add extra crates
-        if(time % 30 == 0)
-        {
-            crates.push_back(Crate(crate_texture, 1, 1));
-        }
-
-        //Move entities
-        for(Crate& c: crates)
-        {
-            c.move(crates);
-        }
-        player.move(crates);
-
-        //Refresh window
-        window.clear();
-        window.render(background);
-        window.render(player);
-        for(Entity& c: crates)
-        {
-            window.render(c);
-        }
-        window.display();
+        handleEvents();
+        update();
 
         time++;
         SDL_Delay(1000/60);

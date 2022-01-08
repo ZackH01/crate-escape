@@ -11,10 +11,84 @@ Player::Player(SDL_Texture* player_texture)
 :Entity(player_texture, Vector2f(616, 720), 32, 32)
 {
     direction = "none";
+    can_jump = false;
+    jump_input = false;
+    game_over = false;
 }
 
 void Player::move(std::vector<Crate>& crate_vect)
 {
+    //Vertical movement
+    float gravity;
+    if(velocity.y < 0)
+    {
+        gravity = 0.8f;
+    }
+    else
+    {
+        //Stronger gravity when falling
+        gravity = 1.0f;
+    }
+    velocity.y += gravity;
+
+    //Jump
+    if(jump_input)
+    {
+        velocity.y = -15.0f;
+        jump_input = false;
+        can_jump = false;
+    }
+
+    //Update y position
+    changePosition(Vector2f(0, velocity.y));
+
+    //Check collision with the floor and ceiling
+    if(position.y > 688-getHeight())
+    {
+        position.y = 688-getHeight();
+        velocity.y = 0;
+        can_jump = true;
+    }
+    else if(position.y < 112)
+    {
+        //Level cleared
+        game_over = true;
+    }
+
+    //Check collision with crates
+    HitboxRect phb;
+    HitboxRect chb;
+
+    for(Crate& crate: crate_vect)
+    {
+        if(checkCollision(crate))
+        {
+            phb = getHitbox();
+            chb = crate.getHitbox();
+
+            //Touched top of crate
+            if(phb.y2 > chb.y1 && phb.y1 < chb.y1)
+            {
+                position.y = chb.y1-getHeight();
+                velocity.y = crate.getFallVelocity();
+                current_crate_velocity = crate.getFallVelocity();
+                can_jump = true;
+            }
+            //Touched bottom of crate
+            else if(phb.y1 < chb.y2 && phb.y2 > chb.y2)
+            {
+                position.y = chb.y2+crate.getFallVelocity();
+                velocity.y = crate.getFallVelocity();
+
+                //Kill player if they hit the bottom of a falling crate
+                if(crate.getFallVelocity())
+                {
+                    game_over = true;
+                }
+            }
+        }
+    }
+
     //Horizontal movement
     float max_vel = 5.0f;
     float acceleration = 0.5f;
@@ -72,9 +146,6 @@ void Player::move(std::vector<Crate>& crate_vect)
     }
 
     //Check collision with crates
-    HitboxRect phb;
-    HitboxRect chb;
-
     for(Crate& crate: crate_vect)
     {
         if(checkCollision(crate))
@@ -99,66 +170,6 @@ void Player::move(std::vector<Crate>& crate_vect)
             }
         }
     }
-
-    //Vertical movement
-    float gravity;
-    if(velocity.y < 0)
-    {
-        gravity = 0.8f;
-    }
-    else
-    {
-        //Stronger gravity when falling
-        gravity = 1.0f;
-    }
-    velocity.y += gravity;
-
-    //Jump
-    if(jump_input)
-    {
-        velocity.y = -15.0f;
-        jump_input = false;
-        can_jump = false;
-    }
-
-    //Update y position
-    changePosition(Vector2f(0, velocity.y));
-
-    //Check collision with the floor
-    if(position.y > 688-getHeight())
-    {
-        position.y = 688-getHeight();
-        velocity.y = 0;
-        can_jump = true;
-    }
-
-    //Check collision with crates
-    for(Crate& crate: crate_vect)
-    {
-        if(checkCollision(crate))
-        {
-            //Your hitbox
-            phb = getHitbox();
-
-            //Get position of crate's hitbox
-            chb = crate.getHitbox();
-
-            //Touched top of crate
-            if(phb.y2 > chb.y1 && phb.y1 < chb.y1)
-            {
-                position.y = chb.y1-getHeight();
-                velocity.y = crate.getFallVelocity();
-                current_crate_velocity = crate.getFallVelocity();
-                can_jump = true;
-            }
-            //Touched bottom of crate
-            else if(phb.y1 < chb.y2 && phb.y2 > chb.y2)
-            {
-                position.y = chb.y2+crate.getFallVelocity();
-                velocity.y = crate.getFallVelocity();
-            }
-        }
-    }
 }
 
 void Player::jump()
@@ -172,4 +183,9 @@ void Player::jump()
 void Player::setDirection(std::string dir)
 {
     direction = dir;
+}
+
+bool& Player::isGameOver()
+{
+    return game_over;
 }
