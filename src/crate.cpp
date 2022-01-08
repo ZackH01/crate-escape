@@ -13,7 +13,7 @@ Crate::Crate(SDL_Texture* crate_texture, int crate_width, int crate_height)
     {
         position.x = (std::rand()%15)*32 + 400;
     }
-    position.y = -getHeight();
+    position.y = 112-getHeight();
 
     //Validate crate width and height
     if(crate_width < 1 || crate_width < 1)

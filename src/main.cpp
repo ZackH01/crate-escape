@@ -12,6 +12,7 @@
 
 RenderWindow window("Crate Escape", 1280, 720);
 SDL_Texture* background;
+SDL_Texture* top_cover_texture;
 SDL_Texture* player_texture;
 SDL_Texture* crate_texture;
 
@@ -25,6 +26,7 @@ int time;
 void loadTextures()
 {
     background = window.loadTexture("res/graphics/background.png");
+    top_cover_texture = window.loadTexture("res/graphics/top_cover.png");
     player_texture = window.loadTexture("res/graphics/player.png");
     crate_texture = window.loadTexture("res/graphics/crate.png");
 }
@@ -59,6 +61,12 @@ void update()
     }
     player.move(crates);
 
+    //Check for game reset
+    if(player.isGameOver())
+    {
+        resetGame();
+    }
+
     //Refresh window
     window.clear();
     window.render(background);
@@ -67,14 +75,9 @@ void update()
     {
         window.render(c);
     }
+    window.render(top_cover_texture, 400, 0, 880, 113);
 
     window.display();
-
-    //Check for game reset
-    if(player.isGameOver())
-    {
-        resetGame();
-    }
 }
 
 void handleEvents()

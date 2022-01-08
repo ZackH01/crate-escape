@@ -30,6 +30,18 @@ void RenderWindow::render(SDL_Texture* texture)
     SDL_RenderCopy(renderer, texture, NULL, NULL);
 }
 
+void RenderWindow::render(SDL_Texture* texture, int x1, int y1, int x2, int y2)
+{
+    //Renders the given texture inside the defined rectangle
+    SDL_Rect dst;
+    dst.x = x1;
+    dst.y = y1;
+    dst.w = x2-x1;
+    dst.h = y2-y1;
+
+    SDL_RenderCopy(renderer, texture, NULL, &dst);
+}
+
 void RenderWindow::render(Entity& entity)
 {
     for(int i=0; i < entity.getCurrentFrameLength(); i++)
