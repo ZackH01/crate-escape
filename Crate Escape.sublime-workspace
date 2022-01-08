@@ -124,7 +124,7 @@
 	{
 		"height": 0.0
 	},
-	"pinned_build_system": "Build Debug",
+	"pinned_build_system": "Build Release",
 	"replace":
 	{
 		"height": 51.2
