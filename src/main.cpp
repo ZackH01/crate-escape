@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <cstdlib>
 #include "RenderWindow.hpp"
 #include "Maths.hpp"
 #include "Entity.hpp"
@@ -39,11 +38,7 @@ void resetGame()
 
 void addCrate()
 {
-    //Frequency of the sizes of crates
-    int crate_widths[10] = {1, 2, 2, 2, 3, 3, 3, 3, 4, 4};
-    int crate_heights[10] = {1, 2, 2, 2, 2, 3, 3, 3, 3, 4};
-
-    crates.push_back(Crate(crate_texture, crate_widths[std::rand()%10], crate_heights[std::rand()%10]));
+    crates.push_back(Crate(crate_texture));
 }
 
 void update()

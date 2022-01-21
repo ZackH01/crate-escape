@@ -6,21 +6,34 @@
 #include "Maths.hpp"
 #include "Crate.hpp"
 
-Crate::Crate(SDL_Texture* crate_texture, int crate_width, int crate_height)
-:Entity(crate_texture, Vector2f(), crate_width*32, crate_height*32, 32, 32)
+Crate::Crate(SDL_Texture* crate_texture)
+:Entity(crate_texture, Vector2f(), 0, 0, 32, 32)
 {
-    while(position.x < 400 || position.x > 880-getWidth())
-    {
-        position.x = (std::rand()%15)*32 + 400;
-    }
-    position.y = 112-getHeight();
+    //Frequency of the sizes of crates
+    const int width_freq[10] = {1, 2, 2, 2, 3, 3, 3, 3, 4, 4};
+    const int height_freq[10] = {1, 2, 2, 2, 2, 3, 3, 3, 3, 4};
 
+    //Set random size
+    int crate_width = width_freq[std::rand()%10];
+    int crate_height = height_freq[std::rand()%10];
+    setSize(crate_width*32, crate_height*32);
+    setHitbox(0, 0, crate_width*32, crate_height*32);
+
+    /*
     //Validate crate width and height
     if(crate_width < 1 || crate_width < 1)
     {
         std::cout << "Error: crate width and height must be 1 or greater!" << std::endl;
         return;
     }
+    */
+
+    //Set random start position
+    while(position.x < 400 || position.x > 880-getWidth())
+    {
+        position.x = (std::rand()%15)*32 + 400;
+    }
+    position.y = 112-getHeight();
 
     //Create crate texture from individual tiles
     int tile_offset_x;
