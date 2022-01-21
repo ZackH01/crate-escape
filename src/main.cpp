@@ -34,6 +34,7 @@ void resetGame()
 {
     player = Player(player_texture);
     crates.clear();
+    Crate::resetCrateMap();
 }
 
 void addCrate()

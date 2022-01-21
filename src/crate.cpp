@@ -6,8 +6,28 @@
 #include "Maths.hpp"
 #include "Crate.hpp"
 
+//Representation of where crates are currently placed - game size is 15x18 tiles
+int Crate::crate_map[18][15] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+
 Crate::Crate(SDL_Texture* crate_texture)
-:Entity(crate_texture, Vector2f(), 0, 0, 32, 32)
+:Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(0)
 {
     //Frequency of the sizes of crates
     const int width_freq[10] = {1, 2, 2, 2, 3, 3, 3, 3, 4, 4};
@@ -29,11 +49,38 @@ Crate::Crate(SDL_Texture* crate_texture)
     */
 
     //Set random start position
-    while(position.x < 400 || position.x > 880-getWidth())
-    {
-        position.x = (std::rand()%15)*32 + 400;
-    }
+    int x_pos = (std::rand()%(16-crate_width));
+    position.x = x_pos*32 + 400;
     position.y = 112-getHeight();
+
+    //Update map
+    bool placed = false;
+    int depth = 0;
+
+    while(!placed && depth < 18)
+    {
+        for(int i = x_pos; i < crate_width+x_pos; i++)
+        {
+            if(crate_map[depth+1][i] == 1 || depth == 17)
+            {
+                //Place crate
+                for(int x = x_pos; x < crate_width+x_pos; x++)
+                {
+                    for(int y = depth; y > depth-crate_height; y--)
+                    {
+                        if(y >= 0)
+                        {
+                            crate_map[y][x] = 1;
+                        }
+                    }
+                }
+                placed = true;
+                break;
+            }
+        }
+        depth++;
+    }
+    //printCrateMap();
 
     //Create crate texture from individual tiles
     int tile_offset_x;
@@ -134,4 +181,28 @@ void Crate::move(std::vector<Crate>& crate_vect)
 float& Crate::getFallVelocity()
 {
     return fall_velocity;
+}
+
+void Crate::resetCrateMap()
+{
+    for(int i = 0; i < 18; i++)
+    {
+        for(int j = 0; j < 15; j++)
+        {
+            crate_map[i][j] = 0;
+        }
+    }
+}
+
+void Crate::printCrateMap()
+{
+    for(int i = 0; i < 18; i++)
+    {
+        for(int j = 0; j < 15; j++)
+        {
+            std::cout << crate_map[i][j] << ", ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 }

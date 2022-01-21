@@ -11,8 +11,11 @@ class Crate: public Entity
         Crate(SDL_Texture* crate_texture);
         void move(std::vector<Crate>& crate_vect);
         float& getFallVelocity();
+        static void resetCrateMap();
 
     private:
-        bool falling = true;
-        float fall_velocity = 0;
+        bool falling;
+        float fall_velocity;
+        static int crate_map[18][15];
+        static void printCrateMap();
 };
