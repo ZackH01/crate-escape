@@ -29,27 +29,59 @@ int Crate::crate_map[18][15] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 Crate::Crate(SDL_Texture* crate_texture)
 :Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(0)
 {
-    //Frequency of the sizes of crates
-    const int width_freq[10] = {1, 2, 2, 2, 3, 3, 3, 3, 4, 4};
+    //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
+    std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)
+
+    for(int w = 1; w <= 4; w++)
+    {
+        for(int x = 0; x <= 15-w; x++)
+        {
+            //A crate of width 1 can always be placed so skip checking these crates
+            bool valid = true;
+            if(w > 1)
+            {
+                //Find where the leftmost tile of the crate would land
+                int y = -1;
+                while(crate_map[y+1][x] == 0 && y < 17)
+                {
+                    y++;
+                }
+
+                //Then check that all remaining tiles to the right don't collide with a crate and don't leave any overhangs
+                for(int i = 1; i < w; i++)
+                {
+                    if(crate_map[y][x+i] == 1)
+                    {
+                        valid = false;
+                    }
+                    if(y < 17 && crate_map[y+1][x+i] == 0)
+                    {
+                        valid = false;
+                    }
+                }
+            }
+
+            if(valid)
+            {
+                valid_placements.push_back(std::make_pair(x, w));
+            }
+        }
+    }
+
+    //Pick a random valid x_pos and width
+    std::pair<int, int> selection = valid_placements[std::rand() % valid_placements.size()];
+    int x_pos = selection.first;
+    int crate_width = selection.second;
+
+    //Frequency of the crate heights
     const int height_freq[10] = {1, 2, 2, 2, 2, 3, 3, 3, 3, 4};
 
-    //Set random size
-    int crate_width = width_freq[std::rand()%10];
+    //Set crate dimensions
     int crate_height = height_freq[std::rand()%10];
     setSize(crate_width*32, crate_height*32);
     setHitbox(0, 0, crate_width*32, crate_height*32);
 
-    /*
-    //Validate crate width and height
-    if(crate_width < 1 || crate_width < 1)
-    {
-        std::cout << "Error: crate width and height must be 1 or greater!" << std::endl;
-        return;
-    }
-    */
-
-    //Set random start position
-    int x_pos = (std::rand()%(16-crate_width));
+    //Set start position
     position.x = x_pos*32 + 400;
     position.y = 112-getHeight();
 
@@ -80,7 +112,6 @@ Crate::Crate(SDL_Texture* crate_texture)
         }
         depth++;
     }
-    //printCrateMap();
 
     //Create crate texture from individual tiles
     int tile_offset_x;
