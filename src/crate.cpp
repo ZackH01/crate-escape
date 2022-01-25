@@ -31,6 +31,7 @@ Crate::Crate(SDL_Texture* crate_texture)
 {
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
     std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)
+    int num_of_one_wide;
 
     for(int w = 1; w <= 4; w++)
     {
@@ -60,6 +61,10 @@ Crate::Crate(SDL_Texture* crate_texture)
                     }
                 }
             }
+            else
+            {
+                num_of_one_wide++;
+            }
 
             if(valid)
             {
@@ -68,8 +73,33 @@ Crate::Crate(SDL_Texture* crate_texture)
         }
     }
 
-    //Pick a random valid x_pos and width
-    std::pair<int, int> selection = valid_placements[std::rand() % valid_placements.size()];
+    //Make crates that are wider more favoured
+    std::vector<std::pair<int, int>> weighted_placements;
+    for(std::pair<int, int> x: valid_placements)
+    {
+        int i = num_of_one_wide;
+
+        //Crates that are 2 wide should be 3 times as likely as 1 wide crates
+        //3 wide are twice as likely as 2 wide
+        //4 wide are same chance as 3 wide
+        if(x.second >= 2)
+        {
+            i *= 3;
+        }
+        if(x.second >= 3)
+        {
+            i *= 2;
+        }
+
+        while(i > 0)
+        {
+            weighted_placements.push_back(x);
+            i--;
+        }
+    }
+
+    //Pick a random x_pos and width
+    std::pair<int, int> selection = weighted_placements[std::rand() % weighted_placements.size()];
     int x_pos = selection.first;
     int crate_width = selection.second;
 
