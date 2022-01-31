@@ -4,11 +4,12 @@
 #include <vector>
 #include "Maths.hpp"
 #include "Entity.hpp"
+#include "Player.hpp"
 
 class Crate: public Entity
 {
     public:
-        Crate(SDL_Texture* crate_texture);
+        Crate(SDL_Texture* crate_texture, int player_x_pos);
         void move(std::vector<Crate>& crate_vect);
         float& getFallVelocity();
         static void resetCrateMap();

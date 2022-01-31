@@ -22,7 +22,7 @@ std::vector<Crate> crates;
 
 bool running;
 SDL_Event event;
-int curr_time;
+int timer;
 
 void loadTextures()
 {
@@ -41,13 +41,13 @@ void resetGame()
 
 void addCrate()
 {
-    crates.push_back(Crate(crate_texture));
+    crates.push_back(Crate(crate_texture, player.getPosition().x));
 }
 
 void update()
 {
     //Add extra crates
-    if(curr_time % 120 == 0)
+    if(timer % 120 == 0)
     {
         addCrate();
     }
@@ -157,7 +157,7 @@ int main(int argc, char* argv[])
     resetGame();
 
     running = true;
-    curr_time = 0;
+    timer = 0;
 
     //Event loop
     while(running)
@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
         handleEvents();
         update();
 
-        curr_time++;
+        timer++;
         SDL_Delay(1000/60);
     }
 

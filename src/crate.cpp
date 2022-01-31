@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdlib>
 #include "Maths.hpp"
+#include "Player.hpp"
 #include "Crate.hpp"
 
 //Representation of where crates are currently placed - game size is 15x18 tiles
@@ -26,7 +27,7 @@ int Crate::crate_map[18][15] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-Crate::Crate(SDL_Texture* crate_texture)
+Crate::Crate(SDL_Texture* crate_texture, int player_x_pos)
 :Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(0)
 {
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
@@ -37,40 +38,61 @@ Crate::Crate(SDL_Texture* crate_texture)
     {
         for(int x = 0; x <= 15-w; x++)
         {
-            //A crate of width 1 can always be placed so skip checking these crates
-            bool valid = true;
-            if(w > 1)
+            //Only place crates that are within 7 tiles from the player
+            int crate_pos = x*32 + 400;
+            if(crate_pos >= player_x_pos - 7*32 && crate_pos <= player_x_pos + (7-w+1)*32)
             {
+
+                //A crate of width 1 can always be placed so skip checking these crates
+                bool valid = true;
+
                 //Find where the leftmost tile of the crate would land
                 int y = -1;
                 while(crate_map[y+1][x] == 0 && y < 17)
                 {
                     y++;
                 }
-
-                //Then check that all remaining tiles to the right don't collide with a crate and don't leave any overhangs
-                for(int i = 1; i < w; i++)
+                
+                //Skip placing crates above the max height
+                if(y < 0)
                 {
-                    if(crate_map[y][x+i] == 1)
+                    continue;
+                }
+
+                //Skip checking other tiles for crates of width 1
+                if(w > 1)
+                {
+
+                    //Check that all remaining tiles to the right don't collide with a crate and don't leave any overhangs
+                    for(int i = 1; i < w; i++)
                     {
-                        valid = false;
-                    }
-                    if(y < 17 && crate_map[y+1][x+i] == 0)
-                    {
-                        valid = false;
+                        if(crate_map[y][x+i] == 1)
+                        {
+                            valid = false;
+                        }
+                        if(y < 17 && crate_map[y+1][x+i] == 0)
+                        {
+                            valid = false;
+                        }
                     }
                 }
-            }
-            else
-            {
-                num_of_one_wide++;
-            }
+                else
+                {
+                    num_of_one_wide++;
+                }
 
-            if(valid)
-            {
-                valid_placements.push_back(std::make_pair(x, w));
+                if(valid)
+                {
+                    valid_placements.push_back(std::make_pair(x, w));
+                }
             }
         }
+    }
+
+    //Check if there is atleast one valid placement
+    if(valid_placements.empty())
+    {
+        return;
     }
 
     //Make crates that are wider more favoured
