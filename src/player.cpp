@@ -8,7 +8,7 @@
 #include "Crate.hpp"
 
 Player::Player(SDL_Texture* player_texture)
-:Entity(player_texture, Vector2f(616, 720), 32, 32)
+:Entity(player_texture, Vector2f(624, 720), 32, 32)
 {
     direction = "none";
     can_jump = false;

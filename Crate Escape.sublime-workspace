@@ -4,12 +4,20 @@
 		"selected_items":
 		[
 			[
-				"c",
-				"crate_height"
+				"de",
+				"device_time"
+			],
+			[
+				"vali",
+				"valid_placements"
 			],
 			[
 				"cr",
-				"crate_width"
+				"crate_map"
+			],
+			[
+				"c",
+				"crate_height"
 			]
 		]
 	},
@@ -61,9 +69,10 @@
 	},
 	"file_history":
 	[
-		"/C/Users/User/GitRepos/crate-escape/include/Crate.hpp",
-		"/C/Users/User/GitRepos/crate-escape/include/Player.hpp",
+		"/C/Users/User/GitRepos/crate-escape/Crate Escape.sublime-project",
 		"/C/Users/User/GitRepos/crate-escape/src/player.cpp",
+		"/C/Users/User/GitRepos/crate-escape/include/Player.hpp",
+		"/C/Users/User/GitRepos/crate-escape/include/Crate.hpp",
 		"/C/Users/User/GitRepos/crate-escape/src/crate.cpp",
 		"/C/Users/User/GitRepos/crate-escape/include/RenderWindow.hpp",
 		"/C/Users/User/GitRepos/crate-escape/src/renderwindow.cpp",
@@ -90,6 +99,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"resetCrateMap",
 			"debug_text"
 		],
 		"highlight": true,
@@ -124,7 +134,7 @@
 	{
 		"height": 0.0
 	},
-	"pinned_build_system": "Build Release",
+	"pinned_build_system": "Build Debug",
 	"replace":
 	{
 		"height": 51.2

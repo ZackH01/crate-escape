@@ -4,15 +4,19 @@
 #include <vector>
 #include "Maths.hpp"
 #include "Entity.hpp"
+#include "Player.hpp"
 
 class Crate: public Entity
 {
     public:
-        Crate(SDL_Texture* crate_texture, int crate_width, int crate_height);
+        Crate(SDL_Texture* crate_texture, int player_x_pos);
         void move(std::vector<Crate>& crate_vect);
         float& getFallVelocity();
+        static void resetCrateMap();
 
     private:
-        bool falling = true;
-        float fall_velocity = 0;
+        bool falling;
+        float fall_velocity;
+        static int crate_map[18][15];
+        static void printCrateMap();
 };

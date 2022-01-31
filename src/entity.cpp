@@ -8,7 +8,7 @@
 Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height, int t_width, int t_height)
 :position(pos), texture(e_texture)
 {
-    //Constructor with no initial frame
+    //Constructor with no initial frame - must also specify tile size
     size.w = e_width;
     size.h = e_height;
     tile_size.w = t_width;
@@ -109,6 +109,12 @@ HitboxRect Entity::getHitbox()
     hb.y2 += position.y;
 
     return hb;
+}
+
+void Entity::setSize(int width, int height)
+{
+    size.w = width;
+    size.h = height;
 }
 
 void Entity::setHitbox(float x_offset, float y_offset, float width, float height)

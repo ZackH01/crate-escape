@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <ctime>
 #include "RenderWindow.hpp"
 #include "Maths.hpp"
 #include "Entity.hpp"
@@ -21,7 +22,7 @@ std::vector<Crate> crates;
 
 bool running;
 SDL_Event event;
-int time;
+int timer;
 
 void loadTextures()
 {
@@ -35,21 +36,18 @@ void resetGame()
 {
     player = Player(player_texture);
     crates.clear();
+    Crate::resetCrateMap();
 }
 
 void addCrate()
 {
-    //Frequency of the sizes of crates
-    int crate_widths[10] = {1, 2, 2, 2, 3, 3, 3, 3, 4, 4};
-    int crate_heights[10] = {1, 2, 2, 2, 2, 3, 3, 3, 3, 4};
-
-    crates.push_back(Crate(crate_texture, crate_widths[std::rand()%10], crate_heights[std::rand()%10]));
+    crates.push_back(Crate(crate_texture, player.getPosition().x));
 }
 
 void update()
 {
     //Add extra crates
-    if(time % 120 == 0)
+    if(timer % 120 == 0)
     {
         addCrate();
     }
@@ -149,12 +147,17 @@ int main(int argc, char* argv[])
         return 0;
     }
 
+    //Set RNG Seed based on the time of the user's device
+    std::time_t device_time;
+    std::time(&device_time);
+    std::srand(device_time);
+
     //Initialise game
     loadTextures();
     resetGame();
 
     running = true;
-    time = 0;
+    timer = 0;
 
     //Event loop
     while(running)
@@ -162,7 +165,7 @@ int main(int argc, char* argv[])
         handleEvents();
         update();
 
-        time++;
+        timer++;
         SDL_Delay(1000/60);
     }
 

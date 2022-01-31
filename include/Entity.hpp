@@ -22,6 +22,7 @@ class Entity
         bool checkCollision(Entity& entity);
 
     protected:
+        void setSize(int width, int height);
         void addTileToCurrentFrame(int tile_x, int tile_y, int x_offset, int y_offset);
         void setHitbox(float x_offset, float y_offset, float width, float height);
         Vector2f position;
