@@ -13,13 +13,16 @@ Player::Player(SDL_Texture* player_texture)
     direction = "none";
     can_jump = false;
     jump_input = false;
+    can_land_on_platform = false;
     game_over = false;
 }
 
-void Player::move(std::vector<Crate>& crate_vect)
+void Player::move(std::vector<Crate>& crate_vect, GoalPlatform& goal)
 {
     //Vertical movement
     float gravity;
+    float max_y_vel = 15;
+
     if(velocity.y < 0)
     {
         gravity = 0.8f;
@@ -30,6 +33,11 @@ void Player::move(std::vector<Crate>& crate_vect)
         gravity = 1.0f;
     }
     velocity.y += gravity;
+
+    if(velocity.y > max_y_vel)
+    {
+        velocity.y = max_y_vel;
+    }
 
     //Jump
     if(jump_input)
@@ -42,28 +50,35 @@ void Player::move(std::vector<Crate>& crate_vect)
     //Update y position
     changePosition(Vector2f(0, velocity.y));
 
-    //Check collision with the floor and ceiling
+    //Check collision with the floor
     if(position.y > 688-getHeight())
     {
         position.y = 688-getHeight();
         velocity.y = 0;
         can_jump = true;
     }
-    else if(position.y < 112)
+    
+    //Check collision with the goal platform, if the player lands on it then the level is cleared
+    HitboxRect phb = getHitbox();
+
+    if(checkCollision(goal) && can_land_on_platform)
     {
-        //Level cleared
         game_over = true;
+        position.y = goal.getPosition().y-getHeight();
+        velocity.y = 0;
+    }
+    else if (phb.y2 < goal.getPosition().y)
+    {
+        can_land_on_platform = true;
     }
 
     //Check collision with crates
-    HitboxRect phb;
     HitboxRect chb;
 
     for(Crate& crate: crate_vect)
     {
         if(checkCollision(crate))
         {
-            phb = getHitbox();
             chb = crate.getHitbox();
 
             //Touched top of crate
@@ -90,7 +105,7 @@ void Player::move(std::vector<Crate>& crate_vect)
     }
 
     //Horizontal movement
-    float max_vel = 5.0f;
+    float max_x_vel = 5.0f;
     float acceleration = 0.5f;
 
     if(direction == "none")
@@ -112,17 +127,19 @@ void Player::move(std::vector<Crate>& crate_vect)
     else if(direction == "right")
     {
         //Move right
-        if(velocity.x < max_vel)
+        velocity.x += acceleration;
+        if(velocity.x > max_x_vel)
         {
-            velocity.x += acceleration;
+            velocity.x = max_x_vel;
         }
     }
     else if(direction == "left")
     {
         //Move left
-        if(velocity.x > -max_vel)
+        velocity.x -= acceleration;
+        if(velocity.x < -max_x_vel)
         {
-            velocity.x -= acceleration;
+            velocity.x = -max_x_vel;
         }
     }
     else

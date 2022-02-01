@@ -10,15 +10,18 @@
 #include "Entity.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
+#include "GoalPlatform.hpp"
 
 RenderWindow window("Crate Escape", 1280, 720);
 SDL_Texture* background;
 SDL_Texture* top_cover_texture;
 SDL_Texture* player_texture;
 SDL_Texture* crate_texture;
+SDL_Texture* platform_texture;
 
 Player player(player_texture);
 std::vector<Crate> crates;
+GoalPlatform goal(platform_texture, 0);
 
 bool running;
 SDL_Event event;
@@ -30,6 +33,7 @@ void loadTextures()
     top_cover_texture = window.loadTexture("res/graphics/top_cover.png");
     player_texture = window.loadTexture("res/graphics/player.png");
     crate_texture = window.loadTexture("res/graphics/crate.png");
+    platform_texture = window.loadTexture("res/graphics/platform.png");
 }
 
 void resetGame()
@@ -37,6 +41,7 @@ void resetGame()
     player = Player(player_texture);
     crates.clear();
     Crate::resetCrateMap();
+    goal = GoalPlatform(platform_texture, 112);
 }
 
 void addCrate()
@@ -57,7 +62,7 @@ void update()
     {
         c.move(crates);
     }
-    player.move(crates);
+    player.move(crates, goal);
 
     //Check for game reset
     if(player.isGameOver())
@@ -67,13 +72,15 @@ void update()
 
     //Refresh window
     window.clear();
+
     window.render(background);
     window.render(player);
     for(Entity& c: crates)
     {
         window.render(c);
     }
-    window.render(top_cover_texture, 400, 0, 880, 113);
+    window.render(goal);
+    window.render(top_cover_texture, 400, 0, 880, 33);
 
     window.display();
 }

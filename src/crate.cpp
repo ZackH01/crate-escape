@@ -135,7 +135,7 @@ Crate::Crate(SDL_Texture* crate_texture, int player_x_pos)
 
     //Set start position
     position.x = x_pos*32 + 400;
-    position.y = 112-getHeight();
+    position.y = 32-getHeight();
 
     //Update map
     bool placed = false;

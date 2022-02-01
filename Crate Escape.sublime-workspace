@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"max",
+				"max_x_vel"
+			],
+			[
+				"can",
+				"can_land_on_platform"
+			],
+			[
+				"ca",
+				"can_land_on_platform"
+			],
+			[
+				"pl",
+				"platform_texture"
+			],
+			[
+				"pla",
+				"platform_texture"
+			],
+			[
 				"de",
 				"device_time"
 			],
@@ -69,6 +89,13 @@
 	},
 	"file_history":
 	[
+		"/C/Users/Zack/GitRepos/crate-escape/include/Maths.hpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/maths.cpp",
+		"/C/Users/Zack/GitRepos/crate-escape/include/Crate.hpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/crate.cpp",
+		"/C/Users/Zack/GitRepos/crate-escape/include/RenderWindow.hpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/main.cpp",
+		"/C/Users/Zack/GitRepos/crate-escape/src/renderwindow.cpp",
 		"/C/Users/User/GitRepos/crate-escape/Crate Escape.sublime-project",
 		"/C/Users/User/GitRepos/crate-escape/src/player.cpp",
 		"/C/Users/User/GitRepos/crate-escape/include/Player.hpp",
@@ -85,7 +112,7 @@
 	],
 	"find":
 	{
-		"height": 27.2
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -99,6 +126,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"player.move",
 			"resetCrateMap",
 			"debug_text"
 		],
