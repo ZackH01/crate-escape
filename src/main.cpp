@@ -26,6 +26,9 @@ GoalPlatform goal(platform_texture, 0);
 bool running;
 SDL_Event event;
 int timer;
+int level;
+int crate_frequency;
+float crate_speed;
 
 void loadTextures()
 {
@@ -38,21 +41,77 @@ void loadTextures()
 
 void resetGame()
 {
+    //Set variables for game difficulty
+    int goal_height = 96;
+
+    //Goal gets further away for the first 5 levels
+    if(level < 5)
+    {
+        goal_height += (5-level)*64;
+    }
+
+    //Crate speeds and frequencies for each level
+    if(level <= 5)
+    {
+        //Sharper increase in difficulty for levels 1, 2 and 3
+        if(level == 1)
+        {
+            crate_speed = 3.5f;
+            crate_frequency = 150;
+        }
+        else if(level == 2)
+        {
+            crate_speed = 3.75f;
+            crate_frequency = 135;
+        }
+        else
+        {
+            crate_speed = 4.0f;
+            crate_frequency = 120;
+        }
+    }
+    else if(level < 15)
+    {
+        crate_speed = 4.0f;
+        crate_frequency = 120;
+
+        //Difficulty increases linearly after level 5 and until level 15
+        if(level % 2 == 0)
+        {
+            //Increase crate frequency
+            crate_frequency -= ((level-5+1)/2) * 15;
+        }
+        else
+        {
+            //Increase crate speed
+            crate_speed += ((level-5)/2) * 0.25f;
+        }
+    }
+    else
+    {
+        //Maximum difficulty
+        crate_speed = 5.5f;
+        crate_frequency = 45;
+    }
+
+    //Initialise game objects
     player = Player(player_texture);
     crates.clear();
     Crate::resetCrateMap();
-    goal = GoalPlatform(platform_texture, 112);
+    goal = GoalPlatform(platform_texture, goal_height);
+
+    std::cout << "Level: " << level << std::endl;
 }
 
 void addCrate()
 {
-    crates.push_back(Crate(crate_texture, player.getPosition().x));
+    crates.push_back(Crate(crate_texture, player.getPosition().x, crate_speed));
 }
 
 void update()
 {
     //Add extra crates
-    if(timer % 120 == 0)
+    if(timer % crate_frequency == 0)
     {
         addCrate();
     }
@@ -67,6 +126,12 @@ void update()
     //Check for game reset
     if(player.isGameOver())
     {
+        level = 1;
+        resetGame();
+    }
+    else if(player.isLevelClear())
+    {
+        level++;
         resetGame();
     }
 
@@ -113,11 +178,6 @@ void handleEvents()
                     case SDLK_LEFT:
                         player.setDirection("left");
                         break;
-
-                    //R key - reset game
-                    case SDLK_r:
-                        resetGame();
-                        break;
                 }
                 break;
 
@@ -161,6 +221,7 @@ int main(int argc, char* argv[])
 
     //Initialise game
     loadTextures();
+    level = 1;
     resetGame();
 
     running = true;

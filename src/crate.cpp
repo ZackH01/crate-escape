@@ -27,8 +27,8 @@ int Crate::crate_map[18][15] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-Crate::Crate(SDL_Texture* crate_texture, int player_x_pos)
-:Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(4.0f)
+Crate::Crate(SDL_Texture* crate_texture, int player_x_pos, float velocity)
+:Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(velocity)
 {
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
     std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)

@@ -14,6 +14,7 @@ Player::Player(SDL_Texture* player_texture)
     can_jump = false;
     jump_input = false;
     can_land_on_platform = false;
+    level_clear = false;
     game_over = false;
 }
 
@@ -63,7 +64,7 @@ void Player::move(std::vector<Crate>& crate_vect, GoalPlatform& goal)
 
     if(checkCollision(goal) && can_land_on_platform)
     {
-        game_over = true;
+        level_clear = true;
         position.y = goal.getPosition().y-getHeight();
         velocity.y = 0;
     }
@@ -200,6 +201,11 @@ void Player::jump()
 void Player::setDirection(std::string dir)
 {
     direction = dir;
+}
+
+bool& Player::isLevelClear()
+{
+    return level_clear;
 }
 
 bool& Player::isGameOver()

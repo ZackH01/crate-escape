@@ -15,6 +15,7 @@ class Player: public Entity
         void move(std::vector<Crate>& crate_vect, GoalPlatform& goal);
         void jump();
         void setDirection(std::string dir);
+        bool& isLevelClear();
         bool& isGameOver();
 
     private:
@@ -24,5 +25,6 @@ class Player: public Entity
         bool can_jump;
         bool jump_input;
         bool can_land_on_platform;
+        bool level_clear;
         bool game_over;
 };
