@@ -9,9 +9,13 @@ RenderWindow::RenderWindow(const char* title, int width, int height)
 {
     window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
     if(window == NULL)
+    {
         std::cout << "Failed to create window. Error: " << SDL_GetError() << std::endl;
+    }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    running = true;
 }
 
 SDL_Texture* RenderWindow::loadTexture(const char* file_path)
@@ -19,7 +23,9 @@ SDL_Texture* RenderWindow::loadTexture(const char* file_path)
     SDL_Texture* texture = NULL;
     texture = IMG_LoadTexture(renderer, file_path);
     if(texture == NULL)
+    {
         std::cout << "Failed to load texture. Error: " << SDL_GetError() << std::endl;
+    }
 
     return texture;
 }
@@ -44,7 +50,7 @@ void RenderWindow::render(SDL_Texture* texture, int x1, int y1, int x2, int y2)
 
 void RenderWindow::render(Entity& entity)
 {
-    for(int i=0; i < entity.getCurrentFrameLength(); i++)
+    for(int i = 0; i < entity.getCurrentFrameLength(); i++)
     {
         //Texture source of each tile in the frame
         SDL_Rect src = entity.getCurrentFrame(i).first;
@@ -68,6 +74,16 @@ void RenderWindow::display()
 void RenderWindow::clear()
 {
     SDL_RenderClear(renderer);
+}
+
+bool RenderWindow::isRunning()
+{
+    return running;
+}
+
+void RenderWindow::exitWindow()
+{
+    running = false;
 }
 
 void RenderWindow::close()

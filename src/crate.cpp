@@ -7,32 +7,12 @@
 #include "Player.hpp"
 #include "Crate.hpp"
 
-//Representation of where crates are currently placed - game size is 15x18 tiles
-int Crate::crate_map[18][15] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-
-Crate::Crate(SDL_Texture* crate_texture, int player_x_pos, float velocity)
+Crate::Crate(SDL_Texture* crate_texture, float player_x_pos, float velocity)
 :Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(velocity)
 {
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
     std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)
-    int num_of_one_wide;
+    int num_of_one_wide = 0;
 
     for(int w = 1; w <= 4; w++)
     {
@@ -42,8 +22,6 @@ Crate::Crate(SDL_Texture* crate_texture, int player_x_pos, float velocity)
             int crate_pos = x*32 + 400;
             if(crate_pos >= player_x_pos - 7*32 && crate_pos <= player_x_pos + (7-w+1)*32)
             {
-
-                //A crate of width 1 can always be placed so skip checking these crates
                 bool valid = true;
 
                 //Find where the leftmost tile of the crate would land
@@ -62,7 +40,6 @@ Crate::Crate(SDL_Texture* crate_texture, int player_x_pos, float velocity)
                 //Skip checking other tiles for crates of width 1
                 if(w > 1)
                 {
-
                     //Check that all remaining tiles to the right don't collide with a crate and don't leave any overhangs
                     for(int i = 1; i < w; i++)
                     {
@@ -113,10 +90,9 @@ Crate::Crate(SDL_Texture* crate_texture, int player_x_pos, float velocity)
             i *= 2;
         }
 
-        while(i > 0)
+        for(; i > 0; i--)
         {
             weighted_placements.push_back(x);
-            i--;
         }
     }
 
@@ -281,3 +257,24 @@ void Crate::printCrateMap()
     }
     std::cout << std::endl;
 }
+
+//Representation of where crates are currently placed - game size is 15x18 tiles
+int Crate::crate_map[18][15] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+                               };
