@@ -9,7 +9,7 @@
 class Crate: public Entity
 {
     public:
-        Crate(SDL_Texture* crate_texture, int player_x_pos);
+        Crate(SDL_Texture* crate_texture, int player_x_pos, float velocity);
         void move(std::vector<Crate>& crate_vect);
         float& getFallVelocity();
         static void resetCrateMap();

@@ -27,8 +27,8 @@ int Crate::crate_map[18][15] = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
-Crate::Crate(SDL_Texture* crate_texture, int player_x_pos)
-:Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(0)
+Crate::Crate(SDL_Texture* crate_texture, int player_x_pos, float velocity)
+:Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(velocity)
 {
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
     std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)
@@ -135,7 +135,7 @@ Crate::Crate(SDL_Texture* crate_texture, int player_x_pos)
 
     //Set start position
     position.x = x_pos*32 + 400;
-    position.y = 112-getHeight();
+    position.y = 32-getHeight();
 
     //Update map
     bool placed = false;
@@ -225,14 +225,6 @@ void Crate::move(std::vector<Crate>& crate_vect)
     if(falling)
     {
         //Move down
-        float gravity = 0.25f;
-        float max_vel = 4.0f;
-
-        if(fall_velocity < max_vel)
-        {
-            fall_velocity += gravity;
-        }
-
         changePosition(Vector2f(0, fall_velocity));
 
         //Check collision with the floor
