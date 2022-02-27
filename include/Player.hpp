@@ -1,8 +1,8 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <string>
 #include <vector>
+#include <string>
 #include "Maths.hpp"
 #include "Entity.hpp"
 #include "Crate.hpp"
@@ -15,8 +15,8 @@ class Player: public Entity
         void move(std::vector<Crate>& crate_vect, GoalPlatform& goal);
         void jump();
         void setDirection(std::string dir);
-        bool& isLevelClear();
-        bool& isGameOver();
+        bool isLevelClear();
+        bool isGameOver();
 
     private:
         std::string direction;

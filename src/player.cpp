@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include <string>
 #include <vector>
+#include <string>
 #include "Maths.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
@@ -203,12 +203,12 @@ void Player::setDirection(std::string dir)
     direction = dir;
 }
 
-bool& Player::isLevelClear()
+bool Player::isLevelClear()
 {
     return level_clear;
 }
 
-bool& Player::isGameOver()
+bool Player::isGameOver()
 {
     return game_over;
 }

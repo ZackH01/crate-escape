@@ -1,15 +1,17 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include <vector>
 #include <cstdlib>
+#include <vector>
 #include "Maths.hpp"
-#include "Player.hpp"
 #include "Crate.hpp"
 
 Crate::Crate(SDL_Texture* crate_texture, float player_x_pos, float velocity)
-:Entity(crate_texture, Vector2f(), 0, 0, 32, 32), falling(true), fall_velocity(velocity)
+:Entity(crate_texture, Vector2f(), 0, 0, 32, 32)
 {
+    falling = true;
+    fall_velocity = velocity;
+
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
     std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)
     int num_of_one_wide = 0;
@@ -229,7 +231,7 @@ void Crate::move(std::vector<Crate>& crate_vect)
     }
 }
 
-float& Crate::getFallVelocity()
+float Crate::getFallVelocity()
 {
     return fall_velocity;
 }

@@ -1,10 +1,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include <string>
-#include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <string>
+#include <vector>
 #include "Maths.hpp"
 #include "RenderWindow.hpp"
 #include "Game.hpp"

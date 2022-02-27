@@ -3,7 +3,6 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 #include "RenderWindow.hpp"
-#include "Entity.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"

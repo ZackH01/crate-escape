@@ -94,7 +94,6 @@ void Game::gameLoop(SDL_Event e)
     }
 
     time++;
-
     renderGame();
 }
 

@@ -6,8 +6,10 @@
 #include "Entity.hpp"
 
 Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height, int t_width, int t_height)
-:position(pos), texture(e_texture)
 {
+    position = pos;
+    texture = e_texture;
+
     //Constructor with no initial frame - must also specify tile size
     size.w = e_width;
     size.h = e_height;
@@ -22,8 +24,10 @@ Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height, 
 }
 
 Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height)
-:position(pos), texture(e_texture)
 {
+    position = pos;
+    texture = e_texture;
+
     //Constructor with initial frame
     size.w = e_width;
     size.h = e_height;
@@ -39,7 +43,7 @@ Entity::Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height)
     hitbox.y2 = e_height;
 }
 
-Vector2f& Entity::getPosition()
+Vector2f Entity::getPosition()
 {
     return position;
 }
@@ -60,12 +64,12 @@ SDL_Texture* Entity::getTexture()
     return texture;
 }
 
-int& Entity::getWidth()
+int Entity::getWidth()
 {
     return size.w;
 }
 
-int& Entity::getHeight()
+int Entity::getHeight()
 {
     return size.h;
 }
