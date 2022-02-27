@@ -13,9 +13,12 @@ class RenderWindow
         void render(Entity& entity);
         void display();
         void clear();
+        bool isRunning();
+        void exitWindow();
         void close();
 
     private:
         SDL_Window* window;
         SDL_Renderer* renderer;
+        bool running;
 };

@@ -9,12 +9,12 @@ class Entity
     public:
         Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height, int t_width, int t_height);
         Entity(SDL_Texture* e_texture, Vector2f pos, int e_width, int e_height);
-        Vector2f& getPosition();
+        Vector2f getPosition();
         void setPosition(Vector2f position);
         void changePosition(Vector2f delta_pos);
         SDL_Texture* getTexture();
-        int& getWidth();
-        int& getHeight();
+        int getWidth();
+        int getHeight();
         std::pair<SDL_Rect, Vector2f>& getCurrentFrame(int index = 0);
         int getCurrentFrameLength();
         HitboxRect& getHitboxSize();
