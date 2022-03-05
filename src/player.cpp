@@ -89,6 +89,7 @@ void Player::move(std::vector<Crate>& crate_vect, GoalPlatform& goal)
                 velocity.y = crate.getFallVelocity();
                 current_crate_velocity = crate.getFallVelocity();
                 can_jump = true;
+                crate.setToJumpedOn();
             }
             //Touched bottom of crate
             else if(phb.y1 < chb.y2 && phb.y2 > chb.y2)

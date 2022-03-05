@@ -11,6 +11,8 @@ Crate::Crate(SDL_Texture* crate_texture, float player_x_pos, float velocity)
 {
     falling = true;
     fall_velocity = velocity;
+    jumped_on = false;
+    added_points = false;
 
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
     std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)
@@ -234,6 +236,31 @@ void Crate::move(std::vector<Crate>& crate_vect)
 float Crate::getFallVelocity()
 {
     return fall_velocity;
+}
+
+bool Crate::isFalling()
+{
+    return falling;
+}
+
+void Crate::setToJumpedOn()
+{
+    jumped_on = true;
+}
+
+bool Crate::hasBeenJumpedOn()
+{
+    return jumped_on;
+}
+
+void Crate::setToAddedPoints()
+{
+    added_points = true;
+}
+
+bool Crate::hasAddedPoints()
+{
+    return added_points;
 }
 
 void Crate::resetCrateMap()

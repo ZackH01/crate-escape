@@ -15,6 +15,7 @@ Game::Game(RenderWindow* w)
     loadGameTextures();
 
     level = 1;
+    score = 0;
     resetGame();
 }
 
@@ -78,6 +79,16 @@ void Game::gameLoop(SDL_Event e)
     for(Crate& c: crates)
     {
         c.move(crates);
+
+        //If the player has jumped onto a falling crate, add to the score
+        if(c.isFalling() && c.hasBeenJumpedOn() && !c.hasAddedPoints())
+        {
+            int crate_score_multiplier = c.getFallVelocity()-2;
+            score += 5 * crate_score_multiplier * (c.getHeight()/32);
+            c.setToAddedPoints();
+
+            std::cout << "+" << 5 * crate_score_multiplier * (c.getHeight()/32) << std::endl;
+        }
     }
     player.move(crates, goal);
 
@@ -85,10 +96,55 @@ void Game::gameLoop(SDL_Event e)
     if(player.isGameOver())
     {
         level = 1;
+        score = 0;
         resetGame();
     }
     else if(player.isLevelClear())
     {
+        //Add score for clearing a level
+        int clear_bonus = 1000;
+        if(level < 5)
+        {
+            clear_bonus += 250 * (level-1);
+        }
+        else
+        {
+            clear_bonus += 500 * level;
+        }
+
+        //Add score for every second below 60 seconds
+        int time_bonus = 60 - time/60;
+        switch(level)
+        {
+            case 1:
+                time_bonus *= 5;
+                break;
+            case 2:
+                time_bonus *= 10;
+                break;
+            case 3:
+                time_bonus *= 20;
+                break;
+            case 4:
+                time_bonus *= 30;
+                break;
+            default:
+                time_bonus *= 50;
+                break;
+        }
+        //Never deduct points
+        if(time_bonus < 0)
+        {
+            time_bonus = 0;
+        }
+
+        score += clear_bonus;
+        score += time_bonus;
+
+        std::cout << "Clear Bonus: " << clear_bonus << std::endl;
+        std::cout << "Time: " << time/60 << " seconds" << std::endl;
+        std::cout << "Time Bonus: " << time_bonus << std::endl << std::endl;
+
         level++;
         resetGame();
     }
@@ -165,6 +221,7 @@ void Game::resetGame()
     goal = GoalPlatform(platform_texture, goal_height);
 
     std::cout << "Level: " << level << std::endl;
+    std::cout << "Score: " << score << std::endl;
 }
 
 void Game::renderGame()

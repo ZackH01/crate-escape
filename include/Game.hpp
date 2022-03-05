@@ -29,6 +29,7 @@ class Game
         std::vector<Crate> crates;
         int time;
         int level;
+        int score;
         int crate_frequency;
         float crate_speed;
 };
