@@ -3,6 +3,7 @@
 #include <iostream>
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
+#include "Text.hpp"
 
 RenderWindow::RenderWindow(const char* title, int width, int height)
 {
@@ -29,6 +30,18 @@ SDL_Texture* RenderWindow::loadTexture(const char* file_path)
     }
 
     return texture;
+}
+
+TTF_Font* RenderWindow::loadFont(const char* file_path, int font_size)
+{
+    TTF_Font* font = NULL;
+    font = TTF_OpenFont(file_path, font_size);
+    if(font == NULL)
+    {
+        std::cout << "Failed to load font. Error: " << SDL_GetError() << std::endl;
+    }
+
+    return font;
 }
 
 void RenderWindow::render(SDL_Texture* texture)
@@ -65,6 +78,30 @@ void RenderWindow::render(Entity& entity)
 
         SDL_RenderCopy(renderer, entity.getTexture(), &src, &dst);
     }
+}
+
+void RenderWindow::render(Text& text)
+{
+    SDL_Surface* surface = TTF_RenderText_Blended(text.getFont(), text.getText().c_str(), text.getColour());
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    //Get the size of the text
+    int height;
+    int width;
+    TTF_SizeText(text.getFont(), text.getText().c_str(), &width, &height);
+
+    //Location of text render
+    SDL_Rect dst;
+    dst.x = text.getPosition().x;
+    dst.y = text.getPosition().y;
+    dst.w = width;
+    dst.h = height;
+
+    SDL_RenderCopy(renderer, texture, NULL, &dst);
+
+    //Free resources
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }
 
 void RenderWindow::display()

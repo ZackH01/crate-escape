@@ -1,9 +1,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
+#include <string>
 #include <vector>
 #include "RenderWindow.hpp"
 #include "Game.hpp"
+#include "Text.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"
@@ -13,6 +16,11 @@ Game::Game(RenderWindow* w)
 {
     window = w;
     loadGameTextures();
+
+    level_text = Text(text_font, "Level: ", Vector2f(150, 125));
+    score_text = Text(text_font, "Score: ", Vector2f(150, 175));
+    level_text.setColour(48, 48, 48);
+    score_text.setColour(48, 48, 48);
 
     level = 1;
     score = 0;
@@ -87,7 +95,7 @@ void Game::gameLoop(SDL_Event e)
             score += 5 * crate_score_multiplier * (c.getHeight()/32);
             c.setToAddedPoints();
 
-            std::cout << "+" << 5 * crate_score_multiplier * (c.getHeight()/32) << std::endl;
+            updateUI();
         }
     }
     player.move(crates, goal);
@@ -140,6 +148,8 @@ void Game::gameLoop(SDL_Event e)
 
         score += clear_bonus;
         score += time_bonus;
+        
+        updateUI();
 
         std::cout << "Clear Bonus: " << clear_bonus << std::endl;
         std::cout << "Time: " << time/60 << " seconds" << std::endl;
@@ -220,8 +230,13 @@ void Game::resetGame()
     Crate::resetCrateMap();
     goal = GoalPlatform(platform_texture, goal_height);
 
-    std::cout << "Level: " << level << std::endl;
-    std::cout << "Score: " << score << std::endl;
+    updateUI();
+}
+
+void Game::updateUI()
+{
+    level_text.setText("Level: " + std::to_string(level));
+    score_text.setText("Score: " + std::to_string(score));
 }
 
 void Game::renderGame()
@@ -237,6 +252,9 @@ void Game::renderGame()
     window->render(goal);
     window->render(top_cover, 400, 0, 880, 33);
 
+    window->render(level_text);
+    window->render(score_text);
+
     window->display();
 }
 
@@ -247,4 +265,5 @@ void Game::loadGameTextures()
     player_texture = window->loadTexture("res/graphics/player.png");
     crate_texture = window->loadTexture("res/graphics/crate.png");
     platform_texture = window->loadTexture("res/graphics/platform.png");
+    text_font = window->loadFont("res/fonts/OpenSans-Regular.ttf", 40);
 }
