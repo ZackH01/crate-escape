@@ -3,12 +3,15 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "Constants.hpp"
 #include "Maths.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 
+using namespace constants;
+
 Player::Player(SDL_Texture* player_texture)
-:Entity(player_texture, Vector2f(624, 720), 32, 32)
+:Entity(player_texture, Vector2f(GAME_LEFT_BORDER+GAME_WIDTH/2, GAME_BOTTOM_BORDER-TILE_SIZE), TILE_SIZE, TILE_SIZE)
 {
     direction = "none";
     can_jump = false;
@@ -52,9 +55,9 @@ void Player::move(std::vector<Crate>& crate_vect, GoalPlatform& goal)
     changePosition(Vector2f(0, velocity.y));
 
     //Check collision with the floor
-    if(position.y > 688-getHeight())
+    if(position.y > GAME_BOTTOM_BORDER-getHeight())
     {
-        position.y = 688-getHeight();
+        position.y = GAME_BOTTOM_BORDER-getHeight();
         velocity.y = 0;
         can_jump = true;
     }
@@ -89,6 +92,7 @@ void Player::move(std::vector<Crate>& crate_vect, GoalPlatform& goal)
                 velocity.y = crate.getFallVelocity();
                 current_crate_velocity = crate.getFallVelocity();
                 can_jump = true;
+                crate.setToJumpedOn();
             }
             //Touched bottom of crate
             else if(phb.y1 < chb.y2 && phb.y2 > chb.y2)
@@ -152,14 +156,14 @@ void Player::move(std::vector<Crate>& crate_vect, GoalPlatform& goal)
     changePosition(Vector2f(velocity.x, 0));
 
     //Check collision with left and right borders
-    if(position.x < 400)
+    if(position.x < GAME_LEFT_BORDER)
     {
-        position.x = 400;
+        position.x = GAME_LEFT_BORDER;
         velocity.x = 0;
     }
-    if(position.x > 880-getWidth())
+    if(position.x > GAME_RIGHT_BORDER-getWidth())
     {
-        position.x = 880-getWidth();
+        position.x = GAME_RIGHT_BORDER-getWidth();
         velocity.x = 0;
     }
 

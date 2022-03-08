@@ -3,14 +3,19 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include "Constants.hpp"
 #include "Maths.hpp"
 #include "Crate.hpp"
 
+using namespace constants;
+
 Crate::Crate(SDL_Texture* crate_texture, float player_x_pos, float velocity)
-:Entity(crate_texture, Vector2f(), 0, 0, 32, 32)
+:Entity(crate_texture, Vector2f(), 0, 0, TILE_SIZE, TILE_SIZE)
 {
     falling = true;
     fall_velocity = velocity;
+    jumped_on = false;
+    added_points = false;
 
     //Find all possible placements and sizes (from width 1-4) such that there are no overhangs
     std::vector<std::pair<int, int>> valid_placements; //std::vector of pairs (x_pos, width)
@@ -21,8 +26,8 @@ Crate::Crate(SDL_Texture* crate_texture, float player_x_pos, float velocity)
         for(int x = 0; x <= 15-w; x++)
         {
             //Only place crates that are within 7 tiles from the player
-            int crate_pos = x*32 + 400;
-            if(crate_pos >= player_x_pos - 7*32 && crate_pos <= player_x_pos + (7-w+1)*32)
+            int crate_pos = x*TILE_SIZE + GAME_LEFT_BORDER;
+            if(crate_pos >= player_x_pos - 7*TILE_SIZE && crate_pos <= player_x_pos + (7-w+1)*TILE_SIZE)
             {
                 bool valid = true;
 
@@ -108,12 +113,12 @@ Crate::Crate(SDL_Texture* crate_texture, float player_x_pos, float velocity)
 
     //Set crate dimensions
     int crate_height = height_freq[std::rand()%10];
-    setSize(crate_width*32, crate_height*32);
-    setHitbox(0, 0, crate_width*32, crate_height*32);
+    setSize(crate_width*TILE_SIZE, crate_height*TILE_SIZE);
+    setHitbox(0, 0, crate_width*TILE_SIZE, crate_height*TILE_SIZE);
 
     //Set start position
-    position.x = x_pos*32 + 400;
-    position.y = 32-getHeight();
+    position.x = x_pos*TILE_SIZE + GAME_LEFT_BORDER;
+    position.y = TILE_SIZE-getHeight();
 
     //Update map
     bool placed = false;
@@ -193,7 +198,7 @@ Crate::Crate(SDL_Texture* crate_texture, float player_x_pos, float velocity)
                 tile_offset_y = 1;
             }
 
-            addTileToCurrentFrame(tile_offset_x*32, tile_offset_y*32, i*32, j*32);
+            addTileToCurrentFrame(tile_offset_x*TILE_SIZE, tile_offset_y*TILE_SIZE, i*TILE_SIZE, j*TILE_SIZE);
         }
     }
 }
@@ -206,9 +211,9 @@ void Crate::move(std::vector<Crate>& crate_vect)
         changePosition(Vector2f(0, fall_velocity));
 
         //Check collision with the floor
-        if(position.y > 688-getHeight())
+        if(position.y > GAME_BOTTOM_BORDER-getHeight())
         {
-            position.y = 688-getHeight();
+            position.y = GAME_BOTTOM_BORDER-getHeight();
             falling = false;
             fall_velocity = 0;
         }
@@ -234,6 +239,31 @@ void Crate::move(std::vector<Crate>& crate_vect)
 float Crate::getFallVelocity()
 {
     return fall_velocity;
+}
+
+bool Crate::isFalling()
+{
+    return falling;
+}
+
+void Crate::setToJumpedOn()
+{
+    jumped_on = true;
+}
+
+bool Crate::hasBeenJumpedOn()
+{
+    return jumped_on;
+}
+
+void Crate::setToAddedPoints()
+{
+    added_points = true;
+}
+
+bool Crate::hasAddedPoints()
+{
+    return added_points;
 }
 
 void Crate::resetCrateMap()

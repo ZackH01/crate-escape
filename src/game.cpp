@@ -1,12 +1,18 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
+#include <string>
 #include <vector>
+#include "Constants.hpp"
 #include "RenderWindow.hpp"
 #include "Game.hpp"
+#include "Text.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"
+
+using namespace constants;
 
 Game::Game(RenderWindow* w)
 :player(Player(NULL)), goal(GoalPlatform(NULL, 0))
@@ -14,7 +20,13 @@ Game::Game(RenderWindow* w)
     window = w;
     loadGameTextures();
 
+    level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS));
+    score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE));
+    level_text.setColour(48, 48, 48, 255);
+    score_text.setColour(48, 48, 48, 255);
+
     level = 1;
+    score = 0;
     resetGame();
 }
 
@@ -78,6 +90,16 @@ void Game::gameLoop(SDL_Event e)
     for(Crate& c: crates)
     {
         c.move(crates);
+
+        //If the player has jumped onto a falling crate, add to the score
+        if(c.isFalling() && c.hasBeenJumpedOn() && !c.hasAddedPoints())
+        {
+            int crate_score_multiplier = c.getFallVelocity()-2;
+            score += 5 * crate_score_multiplier * (c.getHeight()/32);
+            c.setToAddedPoints();
+
+            updateUI();
+        }
     }
     player.move(crates, goal);
 
@@ -85,10 +107,57 @@ void Game::gameLoop(SDL_Event e)
     if(player.isGameOver())
     {
         level = 1;
+        score = 0;
         resetGame();
     }
     else if(player.isLevelClear())
     {
+        //Add score for clearing a level
+        int clear_bonus = 1000;
+        if(level < 5)
+        {
+            clear_bonus += 250 * (level-1);
+        }
+        else
+        {
+            clear_bonus += 500 * level;
+        }
+
+        //Add score for every second below 60 seconds
+        int time_bonus = 60 - time/60;
+        switch(level)
+        {
+            case 1:
+                time_bonus *= 5;
+                break;
+            case 2:
+                time_bonus *= 10;
+                break;
+            case 3:
+                time_bonus *= 20;
+                break;
+            case 4:
+                time_bonus *= 30;
+                break;
+            default:
+                time_bonus *= 50;
+                break;
+        }
+        //Never deduct points
+        if(time_bonus < 0)
+        {
+            time_bonus = 0;
+        }
+
+        score += clear_bonus;
+        score += time_bonus;
+        
+        updateUI();
+
+        std::cout << "Clear Bonus: " << clear_bonus << std::endl;
+        std::cout << "Time: " << time/60 << " seconds" << std::endl;
+        std::cout << "Time Bonus: " << time_bonus << std::endl << std::endl;
+
         level++;
         resetGame();
     }
@@ -105,7 +174,7 @@ void Game::addCrate()
 void Game::resetGame()
 {
     //Set variables for game difficulty
-    int goal_height = 96;
+    int goal_height = GAME_TOP_BORDER+64;
 
     //Goal gets further away for the first 5 levels
     if(level < 5)
@@ -164,7 +233,13 @@ void Game::resetGame()
     Crate::resetCrateMap();
     goal = GoalPlatform(platform_texture, goal_height);
 
-    std::cout << "Level: " << level << std::endl;
+    updateUI();
+}
+
+void Game::updateUI()
+{
+    level_text.setText("Level: " + std::to_string(level));
+    score_text.setText("Score: " + std::to_string(score));
 }
 
 void Game::renderGame()
@@ -178,7 +253,10 @@ void Game::renderGame()
         window->render(c);
     }
     window->render(goal);
-    window->render(top_cover, 400, 0, 880, 33);
+    window->render(top_cover, GAME_LEFT_BORDER, 0, GAME_RIGHT_BORDER, GAME_TOP_BORDER+1);
+
+    window->render(level_text);
+    window->render(score_text);
 
     window->display();
 }
@@ -190,4 +268,5 @@ void Game::loadGameTextures()
     player_texture = window->loadTexture("res/graphics/player.png");
     crate_texture = window->loadTexture("res/graphics/crate.png");
     platform_texture = window->loadTexture("res/graphics/platform.png");
+    text_font = window->loadFont("res/fonts/OpenSans-Regular.ttf", GAME_TEXT_SIZE);
 }

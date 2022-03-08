@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -8,12 +9,13 @@
 #include "Maths.hpp"
 #include "RenderWindow.hpp"
 #include "Game.hpp"
+#include "Text.hpp"
 #include "Entity.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"
 
-int main(int argc, char* argv[])
+int main(int argc, char* args[])
 {
     //Initialise SDL
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -25,6 +27,12 @@ int main(int argc, char* argv[])
     if(!(IMG_Init(IMG_INIT_PNG)))
     {
         std::cout << "IMG Init failed. Error: " << SDL_GetError() << std::endl;
+        return 0;
+    }
+
+    if(TTF_Init() == -1)
+    {
+        std::cout << "TTF Init failed. Error: " << SDL_GetError() << std::endl;
         return 0;
     }
 
@@ -49,6 +57,7 @@ int main(int argc, char* argv[])
     //Close SDL
     window.close();
     SDL_Quit();
+    TTF_Quit();
 
     return 0;
 }
