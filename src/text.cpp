@@ -14,6 +14,7 @@ Text::Text()
     colour.r = 0;
     colour.g = 0;
     colour.b = 0;
+    colour.a = 255;
 }
 
 Text::Text(TTF_Font* f, std::string t, Vector2f pos)
@@ -26,6 +27,7 @@ Text::Text(TTF_Font* f, std::string t, Vector2f pos)
     colour.r = 0;
     colour.g = 0;
     colour.b = 0;
+    colour.a = 255;
 }
 
 TTF_Font* Text::getFont()
@@ -49,11 +51,12 @@ SDL_Colour Text::getColour()
     return colour;
 }
 
-void Text::setColour(int red, int green, int blue)
+void Text::setColour(int red, int green, int blue, int alpha)
 {
     colour.r = red;
     colour.g = green;
     colour.b = blue;
+    colour.a = alpha;
 }
 
 Vector2f Text::getPosition()

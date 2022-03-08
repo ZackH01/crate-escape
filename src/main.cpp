@@ -15,7 +15,7 @@
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"
 
-int main(int argc, char* argv[])
+int main(int argc, char* args[])
 {
     //Initialise SDL
     if(SDL_Init(SDL_INIT_VIDEO) < 0)

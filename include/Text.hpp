@@ -14,7 +14,7 @@ class Text
         std::string getText();
         void setText(std::string t);
         SDL_Colour getColour();
-        void setColour(int red, int green, int blue);
+        void setColour(int red, int green, int blue, int alpha);
         Vector2f getPosition();
 
     private:

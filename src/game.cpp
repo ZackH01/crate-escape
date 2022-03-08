@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Constants.hpp"
 #include "RenderWindow.hpp"
 #include "Game.hpp"
 #include "Text.hpp"
@@ -11,16 +12,18 @@
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"
 
+using namespace constants;
+
 Game::Game(RenderWindow* w)
 :player(Player(NULL)), goal(GoalPlatform(NULL, 0))
 {
     window = w;
     loadGameTextures();
 
-    level_text = Text(text_font, "Level: ", Vector2f(150, 125));
-    score_text = Text(text_font, "Score: ", Vector2f(150, 175));
-    level_text.setColour(48, 48, 48);
-    score_text.setColour(48, 48, 48);
+    level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS));
+    score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE));
+    level_text.setColour(48, 48, 48, 255);
+    score_text.setColour(48, 48, 48, 255);
 
     level = 1;
     score = 0;
@@ -171,7 +174,7 @@ void Game::addCrate()
 void Game::resetGame()
 {
     //Set variables for game difficulty
-    int goal_height = 96;
+    int goal_height = GAME_TOP_BORDER+64;
 
     //Goal gets further away for the first 5 levels
     if(level < 5)
@@ -250,7 +253,7 @@ void Game::renderGame()
         window->render(c);
     }
     window->render(goal);
-    window->render(top_cover, 400, 0, 880, 33);
+    window->render(top_cover, GAME_LEFT_BORDER, 0, GAME_RIGHT_BORDER, GAME_TOP_BORDER+1);
 
     window->render(level_text);
     window->render(score_text);
@@ -265,5 +268,5 @@ void Game::loadGameTextures()
     player_texture = window->loadTexture("res/graphics/player.png");
     crate_texture = window->loadTexture("res/graphics/crate.png");
     platform_texture = window->loadTexture("res/graphics/platform.png");
-    text_font = window->loadFont("res/fonts/OpenSans-Regular.ttf", 40);
+    text_font = window->loadFont("res/fonts/OpenSans-Regular.ttf", GAME_TEXT_SIZE);
 }
