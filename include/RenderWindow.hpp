@@ -16,6 +16,7 @@ class RenderWindow
         void render(Text& text);
         void display();
         void clear();
+        SDL_Renderer* getRenderer();
         bool isRunning();
         void exitWindow();
         void close();

@@ -20,8 +20,8 @@ Game::Game(RenderWindow* w)
     window = w;
     loadGameTextures();
 
-    level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS));
-    score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE));
+    level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS), window->getRenderer());
+    score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE), window->getRenderer());
     level_text.setColour(48, 48, 48, 255);
     score_text.setColour(48, 48, 48, 255);
 

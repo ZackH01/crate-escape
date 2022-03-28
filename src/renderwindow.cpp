@@ -82,8 +82,7 @@ void RenderWindow::render(Entity& entity)
 
 void RenderWindow::render(Text& text)
 {
-    SDL_Surface* surface = TTF_RenderText_Blended(text.getFont(), text.getText().c_str(), text.getColour());
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Texture* texture = text.getTexture();
 
     //Get the size of the text
     int height;
@@ -98,10 +97,6 @@ void RenderWindow::render(Text& text)
     dst.h = height;
 
     SDL_RenderCopy(renderer, texture, NULL, &dst);
-
-    //Free resources
-    SDL_FreeSurface(surface);
-    SDL_DestroyTexture(texture);
 }
 
 void RenderWindow::display()
@@ -112,6 +107,11 @@ void RenderWindow::display()
 void RenderWindow::clear()
 {
     SDL_RenderClear(renderer);
+}
+
+SDL_Renderer* RenderWindow::getRenderer()
+{
+    return renderer;
 }
 
 bool RenderWindow::isRunning()
