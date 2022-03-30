@@ -84,17 +84,12 @@ void RenderWindow::render(Text& text)
 {
     SDL_Texture* texture = text.getTexture();
 
-    //Get the size of the text
-    int height;
-    int width;
-    TTF_SizeText(text.getFont(), text.getText().c_str(), &width, &height);
-
     //Location of text render
     SDL_Rect dst;
     dst.x = text.getPosition().x;
     dst.y = text.getPosition().y;
-    dst.w = width;
-    dst.h = height;
+    dst.w = text.getWidth();
+    dst.h = text.getHeight();
 
     SDL_RenderCopy(renderer, texture, NULL, &dst);
 }

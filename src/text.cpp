@@ -73,6 +73,27 @@ Vector2f Text::getPosition()
     return position;
 }
 
+void Text::setPosition(Vector2f pos)
+{
+    position = pos;
+}
+
+int Text::getWidth()
+{
+    int width;
+    TTF_SizeText(font, text.c_str(), &width, NULL);
+
+    return width;
+}
+
+int Text::getHeight()
+{
+    int height;
+    TTF_SizeText(font, text.c_str(), NULL, &height);
+
+    return height;
+}
+
 SDL_Texture* Text::getTexture()
 {
     return texture;

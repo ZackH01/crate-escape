@@ -16,6 +16,9 @@ class Text
         SDL_Colour getColour();
         void setColour(int red, int green, int blue, int alpha);
         Vector2f getPosition();
+        void setPosition(Vector2f pos);
+        int getWidth();
+        int getHeight();
         SDL_Texture* getTexture();
 
     private:
