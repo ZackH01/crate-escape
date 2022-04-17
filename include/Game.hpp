@@ -5,6 +5,7 @@
 #include <vector>
 #include "RenderWindow.hpp"
 #include "Text.hpp"
+#include "Button.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"
@@ -28,6 +29,7 @@ class Game
         SDL_Texture* player_texture;
         SDL_Texture* crate_texture;
         SDL_Texture* platform_texture;
+        SDL_Texture* button_texture;
         TTF_Font* text_font;
         Player player;
         GoalPlatform goal;
@@ -35,6 +37,7 @@ class Game
         Text level_text;
         Text score_text;
         Text paused_text;
+        Button continue_button;
         bool paused;
         int time;
         int level;
