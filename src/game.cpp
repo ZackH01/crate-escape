@@ -8,7 +8,6 @@
 #include "RenderWindow.hpp"
 #include "Game.hpp"
 #include "Text.hpp"
-#include "Button.hpp"
 #include "Player.hpp"
 #include "Crate.hpp"
 #include "GoalPlatform.hpp"
@@ -24,7 +23,6 @@ Game::Game(RenderWindow* w)
     level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS), window->getRenderer());
     score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE), window->getRenderer());
     paused_text = Text(text_font, "Paused", Vector2f(), window->getRenderer());
-    continue_button = Button(button_texture, text_font, "Continue", window->getRenderer(), Vector2f(50, 50), 200, 100);
     level_text.setColour(48, 48, 48, 255);
     score_text.setColour(48, 48, 48, 255);
     paused_text.setColour(16, 16, 16, 255);
@@ -287,7 +285,6 @@ void Game::renderGame()
     {
         window->render(paused_text);
         window->render(paused_shader, GAME_LEFT_BORDER, GAME_TOP_BORDER, GAME_RIGHT_BORDER, GAME_BOTTOM_BORDER);
-        window->render(continue_button);
     }
 
     window->display();
@@ -301,7 +298,6 @@ void Game::loadGameTextures()
     player_texture = window->loadTexture("res/graphics/player.png");
     crate_texture = window->loadTexture("res/graphics/crate.png");
     platform_texture = window->loadTexture("res/graphics/platform.png");
-    button_texture = window->loadTexture("res/graphics/button.png");
     text_font = window->loadFont("res/fonts/OpenSans-Regular.ttf", GAME_TEXT_SIZE);
 
     //Create background effect while paused from a surface

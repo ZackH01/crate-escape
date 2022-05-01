@@ -4,7 +4,6 @@
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
 #include "Text.hpp"
-#include "Button.hpp"
 
 RenderWindow::RenderWindow(const char* title, int width, int height)
 {
@@ -93,22 +92,6 @@ void RenderWindow::render(Text& text)
     dst.h = text.getHeight();
 
     SDL_RenderCopy(renderer, texture, NULL, &dst);
-}
-
-void RenderWindow::render(Button& button)
-{
-    //Render background image for button
-    SDL_Rect dst;
-    dst.x = button.getPosition().x;
-    dst.y = button.getPosition().y;
-    dst.w = button.getWidth();
-    dst.h = button.getHeight();
-
-    SDL_RenderCopy(renderer, button.getBackgroundTexture(), NULL, &dst);
-    
-    //Render text
-    Text t = button.getText();
-    render(t);
 }
 
 void RenderWindow::display()
