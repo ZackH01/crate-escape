@@ -9,6 +9,8 @@ Text::Text()
     font = NULL;
     text = "";
     position = Vector2f();
+    texture = NULL;
+    renderer = NULL;
 
     //Default colour is black
     colour.r = 0;
@@ -17,17 +19,21 @@ Text::Text()
     colour.a = 255;
 }
 
-Text::Text(TTF_Font* f, std::string t, Vector2f pos)
+Text::Text(TTF_Font* f, std::string t, Vector2f pos, SDL_Renderer* r)
 {
     font = f;
     text = t;
     position = pos;
+    texture = NULL;
+    renderer = r;
 
     //Default colour is black
     colour.r = 0;
     colour.g = 0;
     colour.b = 0;
     colour.a = 255;
+
+    updateTexture();
 }
 
 TTF_Font* Text::getFont()
@@ -44,6 +50,7 @@ std::string Text::getText()
 void Text::setText(std::string t)
 {
     text = t;
+    updateTexture();
 }
 
 SDL_Colour Text::getColour()
@@ -57,9 +64,53 @@ void Text::setColour(int red, int green, int blue, int alpha)
     colour.g = green;
     colour.b = blue;
     colour.a = alpha;
+
+    updateTexture();
 }
 
 Vector2f Text::getPosition()
 {
     return position;
+}
+
+void Text::setPosition(Vector2f pos)
+{
+    position = pos;
+}
+
+int Text::getWidth()
+{
+    int width;
+    TTF_SizeText(font, text.c_str(), &width, NULL);
+
+    return width;
+}
+
+int Text::getHeight()
+{
+    int height;
+    TTF_SizeText(font, text.c_str(), NULL, &height);
+
+    return height;
+}
+
+SDL_Texture* Text::getTexture()
+{
+    return texture;
+}
+
+void Text::updateTexture()
+{
+    if(texture != NULL)
+    {
+        //Destroy texture if it already exists
+        SDL_DestroyTexture(texture);
+        texture = NULL;
+    }
+
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), colour);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    //Free resources
+    SDL_FreeSurface(surface);
 }

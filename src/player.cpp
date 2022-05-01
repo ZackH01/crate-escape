@@ -11,7 +11,7 @@
 using namespace constants;
 
 Player::Player(SDL_Texture* player_texture)
-:Entity(player_texture, Vector2f(GAME_LEFT_BORDER+GAME_WIDTH/2, GAME_BOTTOM_BORDER-TILE_SIZE), TILE_SIZE, TILE_SIZE)
+:Entity(player_texture, Vector2f(GAME_LEFT_BORDER + (GAME_WIDTH/2) - (TILE_SIZE/2), GAME_BOTTOM_BORDER - TILE_SIZE), TILE_SIZE, TILE_SIZE)
 {
     direction = "none";
     can_jump = false;

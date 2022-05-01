@@ -23,6 +23,7 @@ class Game
         void loadGameTextures();
         RenderWindow* window;
         SDL_Texture* background;
+        SDL_Texture* paused_shader;
         SDL_Texture* top_cover;
         SDL_Texture* player_texture;
         SDL_Texture* crate_texture;
@@ -33,6 +34,8 @@ class Game
         std::vector<Crate> crates;
         Text level_text;
         Text score_text;
+        Text paused_text;
+        bool paused;
         int time;
         int level;
         int score;

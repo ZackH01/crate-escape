@@ -20,11 +20,15 @@ Game::Game(RenderWindow* w)
     window = w;
     loadGameTextures();
 
-    level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS));
-    score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE));
+    level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS), window->getRenderer());
+    score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE), window->getRenderer());
+    paused_text = Text(text_font, "Paused", Vector2f(), window->getRenderer());
     level_text.setColour(48, 48, 48, 255);
     score_text.setColour(48, 48, 48, 255);
+    paused_text.setColour(16, 16, 16, 255);
+    paused_text.setPosition(Vector2f(GAME_CENTRE_X - (paused_text.getWidth()/2), GAME_CENTRE_Y - 100));
 
+    paused = false;
     level = 1;
     score = 0;
     resetGame();
@@ -60,6 +64,19 @@ void Game::gameLoop(SDL_Event e)
                     case SDLK_LEFT:
                         player.setDirection("left");
                         break;
+
+                    //Escape key -> toggle pause
+                    case SDLK_ESCAPE:
+                        if(paused)
+                        {
+                            paused = false;
+                        }
+                        else
+                        {
+                            paused = true;
+                        }
+
+                        break;
                 }
                 break;
 
@@ -80,89 +97,94 @@ void Game::gameLoop(SDL_Event e)
         }
     }
 
-    //Add extra crates
-    if(time % crate_frequency == 0)
+    //Only update the game if it is not paused
+    if(!paused)
     {
-        addCrate();
-    }
-
-    //Move entities
-    for(Crate& c: crates)
-    {
-        c.move(crates);
-
-        //If the player has jumped onto a falling crate, add to the score
-        if(c.isFalling() && c.hasBeenJumpedOn() && !c.hasAddedPoints())
+        //Add extra crates
+        if(time % crate_frequency == 0)
         {
-            int crate_score_multiplier = c.getFallVelocity()-2;
-            score += 5 * crate_score_multiplier * (c.getHeight()/32);
-            c.setToAddedPoints();
+            addCrate();
+        }
 
+        //Move entities
+        for(Crate& c: crates)
+        {
+            c.move(crates);
+
+            //If the player has jumped onto a falling crate, add to the score
+            if(c.isFalling() && c.hasBeenJumpedOn() && !c.hasAddedPoints())
+            {
+                int crate_score_multiplier = c.getFallVelocity()-2;
+                score += 5 * crate_score_multiplier * (c.getHeight()/32);
+                c.setToAddedPoints();
+
+                updateUI();
+            }
+        }
+        player.move(crates, goal);
+
+        //Check for game reset
+        if(player.isGameOver())
+        {
+            level = 1;
+            score = 0;
+            resetGame();
+        }
+        else if(player.isLevelClear())
+        {
+            //Add score for clearing a level
+            int clear_bonus = 1000;
+            if(level < 5)
+            {
+                clear_bonus += 250 * (level-1);
+            }
+            else
+            {
+                clear_bonus += 500 * level;
+            }
+
+            //Add score for every second below 60 seconds
+            int time_bonus = 60 - time/60;
+            switch(level)
+            {
+                case 1:
+                    time_bonus *= 5;
+                    break;
+                case 2:
+                    time_bonus *= 10;
+                    break;
+                case 3:
+                    time_bonus *= 20;
+                    break;
+                case 4:
+                    time_bonus *= 30;
+                    break;
+                default:
+                    time_bonus *= 50;
+                    break;
+            }
+            //Never deduct points
+            if(time_bonus < 0)
+            {
+                time_bonus = 0;
+            }
+
+            score += clear_bonus;
+            score += time_bonus;
+            
             updateUI();
-        }
-    }
-    player.move(crates, goal);
 
-    //Check for game reset
-    if(player.isGameOver())
-    {
-        level = 1;
-        score = 0;
-        resetGame();
-    }
-    else if(player.isLevelClear())
-    {
-        //Add score for clearing a level
-        int clear_bonus = 1000;
-        if(level < 5)
-        {
-            clear_bonus += 250 * (level-1);
-        }
-        else
-        {
-            clear_bonus += 500 * level;
+            std::cout << "Clear Bonus: " << clear_bonus << std::endl;
+            std::cout << "Time: " << time/60 << " seconds" << std::endl;
+            std::cout << "Time Bonus: " << time_bonus << std::endl << std::endl;
+
+            level++;
+            resetGame();
         }
 
-        //Add score for every second below 60 seconds
-        int time_bonus = 60 - time/60;
-        switch(level)
-        {
-            case 1:
-                time_bonus *= 5;
-                break;
-            case 2:
-                time_bonus *= 10;
-                break;
-            case 3:
-                time_bonus *= 20;
-                break;
-            case 4:
-                time_bonus *= 30;
-                break;
-            default:
-                time_bonus *= 50;
-                break;
-        }
-        //Never deduct points
-        if(time_bonus < 0)
-        {
-            time_bonus = 0;
-        }
-
-        score += clear_bonus;
-        score += time_bonus;
-        
-        updateUI();
-
-        std::cout << "Clear Bonus: " << clear_bonus << std::endl;
-        std::cout << "Time: " << time/60 << " seconds" << std::endl;
-        std::cout << "Time Bonus: " << time_bonus << std::endl << std::endl;
-
-        level++;
-        resetGame();
+        time++;
     }
 
-    time++;
     renderGame();
 }
 
@@ -258,15 +280,30 @@ void Game::renderGame()
     window->render(level_text);
     window->render(score_text);
 
+    //Show pause text when paused and apply background effect
+    if(paused)
+    {
+        window->render(paused_text);
+        window->render(paused_shader, GAME_LEFT_BORDER, GAME_TOP_BORDER, GAME_RIGHT_BORDER, GAME_BOTTOM_BORDER);
+    }
+
     window->display();
 }
 
 void Game::loadGameTextures()
 {
+    //Load textures from files
     background = window->loadTexture("res/graphics/background.png");
     top_cover = window->loadTexture("res/graphics/top_cover.png");
     player_texture = window->loadTexture("res/graphics/player.png");
     crate_texture = window->loadTexture("res/graphics/crate.png");
     platform_texture = window->loadTexture("res/graphics/platform.png");
     text_font = window->loadFont("res/fonts/OpenSans-Regular.ttf", GAME_TEXT_SIZE);
+
+    //Create background effect while paused from a surface
+    SDL_Surface* surface = SDL_CreateRGBSurface(SDL_SWSURFACE, GAME_WIDTH, GAME_HEIGHT, 32, 0, 0, 0, 0);
+    paused_shader = SDL_CreateTextureFromSurface(window->getRenderer(), surface);
+    SDL_SetTextureBlendMode(paused_shader, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureAlphaMod(paused_shader, 32);
+    SDL_FreeSurface(surface);
 }
