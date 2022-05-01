@@ -20,18 +20,32 @@ Game::Game(RenderWindow* w)
     window = w;
     loadGameTextures();
 
-    level_text = Text(text_font, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS), window->getRenderer());
-    score_text = Text(text_font, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+GAME_TEXT_SIZE), window->getRenderer());
-    paused_text = Text(text_font, "Paused", Vector2f(), window->getRenderer());
+    title_text = Text(font_72, "Crate Escape", Vector2f(), window->getRenderer());
+    continue_text = Text(font_18, "Press any key to continue", Vector2f(), window->getRenderer());
+    level_text = Text(font_36, "Level: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS), window->getRenderer());
+    score_text = Text(font_36, "Score: ", Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+36), window->getRenderer());
+    paused_text = Text(font_36, "Paused", Vector2f(), window->getRenderer());
+    level_clear_text = Text(font_72, "Level Cleared!", Vector2f(), window->getRenderer());
+    clear_bonus_text = Text(font_36, "Clear Bonus: +", Vector2f(), window->getRenderer());
+    time_bonus_text = Text(font_36, "Time Bonus: +", Vector2f(), window->getRenderer());
+    game_over_text = Text(font_72, "Game Over!", Vector2f(), window->getRenderer());
     level_text.setColour(48, 48, 48, 255);
     score_text.setColour(48, 48, 48, 255);
     paused_text.setColour(16, 16, 16, 255);
+    level_clear_text.setColour(48, 48, 48, 255);
+    clear_bonus_text.setColour(48, 48, 48, 255);
+    time_bonus_text.setColour(48, 48, 48, 255);
+    game_over_text.setColour(48, 48, 48, 255);
+    title_text.setColour(48, 48, 48, 255);
+    continue_text.setColour(48, 48, 48, 255);
+    title_text.setPosition(Vector2f(SCREEN_CENTRE_X - (title_text.getWidth()/2), 80));
+    continue_text.setPosition(Vector2f(SCREEN_CENTRE_X - (continue_text.getWidth()/2), 550));
     paused_text.setPosition(Vector2f(GAME_CENTRE_X - (paused_text.getWidth()/2), GAME_CENTRE_Y - 100));
+    game_over_text.setPosition(Vector2f(SCREEN_CENTRE_X - (game_over_text.getWidth()/2), 80));
 
-    paused = false;
+    state = START_SCREEN;
     level = 1;
     score = 0;
-    resetGame();
 }
 
 void Game::gameLoop(SDL_Event e)
@@ -39,66 +53,86 @@ void Game::gameLoop(SDL_Event e)
     //Handle events
     while(SDL_PollEvent(&e))
     {
-        switch(e.type)
+        if(state == GAME_RUNNING || state == GAME_PAUSED)
         {
-            //Close window event
-            case SDL_QUIT:
-                window->exitWindow();
-                return;
+            //Game controls
+            switch(e.type)
+            {
+                //Close window event
+                case SDL_QUIT:
+                    window->exitWindow();
+                    return;
 
-            //Keyboard events
-            case SDL_KEYDOWN:
-                switch(e.key.keysym.sym)
-                {
-                    //Up arrow -> jump
-                    case SDLK_UP:
-                        player.jump();
-                        break;
+                //Keyboard events
+                case SDL_KEYDOWN:
+                    switch(e.key.keysym.sym)
+                    {
+                        //Up arrow -> jump
+                        case SDLK_UP:
+                            player.jump();
+                            break;
 
-                    //Right arrow -> move right
-                    case SDLK_RIGHT:
-                        player.setDirection("right");
-                        break;
+                        //Right arrow -> move right
+                        case SDLK_RIGHT:
+                            player.setDirection("right");
+                            break;
 
-                    //Left arrow -> move left
-                    case SDLK_LEFT:
-                        player.setDirection("left");
-                        break;
+                        //Left arrow -> move left
+                        case SDLK_LEFT:
+                            player.setDirection("left");
+                            break;
 
-                    //Escape key -> toggle pause
-                    case SDLK_ESCAPE:
-                        if(paused)
-                        {
-                            paused = false;
-                        }
-                        else
-                        {
-                            paused = true;
-                        }
+                        //Escape key -> toggle pause
+                        case SDLK_ESCAPE:
+                            if(state == GAME_RUNNING)
+                            {
+                                state = GAME_PAUSED;
+                            }
+                            else
+                            {
+                                state = GAME_RUNNING;
+                            }
 
-                        break;
-                }
-                break;
+                            break;
+                    }
+                    break;
 
-            case SDL_KEYUP:
-                switch(e.key.keysym.sym)
-                {
-                    //Right arrow
-                    case SDLK_RIGHT:
-                        player.setDirection("none");
-                        break;
+                case SDL_KEYUP:
+                    switch(e.key.keysym.sym)
+                    {
+                        //Right arrow
+                        case SDLK_RIGHT:
+                            player.setDirection("none");
+                            break;
 
-                    //Left arrow
-                    case SDLK_LEFT:
-                        player.setDirection("none");
-                        break;
-                }
-                break;
+                        //Left arrow
+                        case SDLK_LEFT:
+                            player.setDirection("none");
+                            break;
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            //Press any key to continue
+            switch(e.type)
+            {
+                //Close window event
+                case SDL_QUIT:
+                    window->exitWindow();
+                    return;
+
+                //Keyboard events
+                case SDL_KEYDOWN:
+                    resetGame();
+                    break;
+            }
         }
     }
 
-    //Only update the game if it is not paused
-    if(!paused)
+    //Update the game if it is not paused or on any transition screen
+    if(state == GAME_RUNNING)
     {
         //Add extra crates
         if(time % crate_frequency == 0)
@@ -118,7 +152,7 @@ void Game::gameLoop(SDL_Event e)
                 score += 5 * crate_score_multiplier * (c.getHeight()/32);
                 c.setToAddedPoints();
 
-                updateUI();
+                updateGameUI();
             }
         }
         player.move(crates, goal);
@@ -126,9 +160,8 @@ void Game::gameLoop(SDL_Event e)
         //Check for game reset
         if(player.isGameOver())
         {
-            level = 1;
-            score = 0;
-            resetGame();
+            state = GAME_OVER;
+            score_text.setPosition(Vector2f(SCREEN_CENTRE_X - (score_text.getWidth()/2), 280));
         }
         else if(player.isLevelClear())
         {
@@ -171,15 +204,17 @@ void Game::gameLoop(SDL_Event e)
 
             score += clear_bonus;
             score += time_bonus;
+            updateGameUI();
             
-            updateUI();
+            level_clear_text.setText("Level " + std::to_string(level) + " Cleared!");
+            clear_bonus_text.setText("Clear Bonus:  +" + std::to_string(clear_bonus));
+            time_bonus_text.setText("Time Bonus:  +" + std::to_string(time_bonus));
+            level_clear_text.setPosition(Vector2f(SCREEN_CENTRE_X - (level_clear_text.getWidth()/2), 80));
+            clear_bonus_text.setPosition(Vector2f(SCREEN_CENTRE_X - (clear_bonus_text.getWidth()/2), 280));
+            time_bonus_text.setPosition(Vector2f(SCREEN_CENTRE_X - (time_bonus_text.getWidth()/2), 316));
+            score_text.setPosition(Vector2f(SCREEN_CENTRE_X - (score_text.getWidth()/2), 370));
 
-            std::cout << "Clear Bonus: " << clear_bonus << std::endl;
-            std::cout << "Time: " << time/60 << " seconds" << std::endl;
-            std::cout << "Time Bonus: " << time_bonus << std::endl << std::endl;
-
-            level++;
-            resetGame();
+            state = LEVEL_CLEAR;
         }
 
         time++;
@@ -195,6 +230,19 @@ void Game::addCrate()
 
 void Game::resetGame()
 {
+    if(state == GAME_OVER || state == START_SCREEN)
+    {
+        level = 1;
+        score = 0;
+    }
+    else
+    {
+        level++;
+    }
+
+    state = GAME_RUNNING;
+    score_text.setPosition(Vector2f(GAME_TEXT_X_POS, GAME_TEXT_Y_POS+36));
+
     //Set variables for game difficulty
     int goal_height = GAME_TOP_BORDER+64;
 
@@ -255,12 +303,12 @@ void Game::resetGame()
     Crate::resetCrateMap();
     goal = GoalPlatform(platform_texture, goal_height);
 
-    updateUI();
+    updateGameUI();
 }
 
-void Game::updateUI()
+void Game::updateGameUI()
 {
-    level_text.setText("Level: " + std::to_string(level));
+    level_text.setText("Level:  " + std::to_string(level));
     score_text.setText("Score: " + std::to_string(score));
 }
 
@@ -268,23 +316,55 @@ void Game::renderGame()
 {
     window->clear();
 
-    window->render(background);
-    window->render(player);
-    for(Entity& c: crates)
+    switch(state)
     {
-        window->render(c);
-    }
-    window->render(goal);
-    window->render(top_cover, GAME_LEFT_BORDER, 0, GAME_RIGHT_BORDER, GAME_TOP_BORDER+1);
+        case START_SCREEN:
+            //Render start screen
+            window->render(background);
+            window->render(title_text);
+            window->render(continue_text);
+            break;
 
-    window->render(level_text);
-    window->render(score_text);
+        case LEVEL_CLEAR:
+            //Render level cleared screen
+            window->render(background);
+            window->render(level_clear_text);
+            window->render(clear_bonus_text);
+            window->render(time_bonus_text);
+            window->render(score_text);
+            window->render(continue_text);
+            break;
 
-    //Show pause text when paused and apply background effect
-    if(paused)
-    {
-        window->render(paused_text);
-        window->render(paused_shader, GAME_LEFT_BORDER, GAME_TOP_BORDER, GAME_RIGHT_BORDER, GAME_BOTTOM_BORDER);
+        case GAME_OVER:
+            //Render gameover screen
+            window->render(background);
+            window->render(game_over_text);
+            window->render(score_text);
+            window->render(continue_text);
+            break;
+
+        default:
+            //Render main game screen
+            window->render(game_background);
+            window->render(player);
+            for(Entity& c: crates)
+            {
+                window->render(c);
+            }
+            window->render(goal);
+            window->render(background, GAME_LEFT_BORDER, 0, GAME_RIGHT_BORDER, GAME_TOP_BORDER);
+
+            window->render(level_text);
+            window->render(score_text);
+
+            //Show pause text and apply background effect when paused
+            if(state == GAME_PAUSED)
+            {
+                window->render(paused_text);
+                window->render(paused_shader, GAME_LEFT_BORDER, GAME_TOP_BORDER, GAME_RIGHT_BORDER, GAME_BOTTOM_BORDER);
+            }
+
+            break;
     }
 
     window->display();
@@ -293,15 +373,23 @@ void Game::renderGame()
 void Game::loadGameTextures()
 {
     //Load textures from files
-    background = window->loadTexture("res/graphics/background.png");
-    top_cover = window->loadTexture("res/graphics/top_cover.png");
+    game_background = window->loadTexture("res/graphics/background.png");
     player_texture = window->loadTexture("res/graphics/player.png");
     crate_texture = window->loadTexture("res/graphics/crate.png");
     platform_texture = window->loadTexture("res/graphics/platform.png");
-    text_font = window->loadFont("res/fonts/OpenSans-Regular.ttf", GAME_TEXT_SIZE);
+    font_18 = window->loadFont("res/fonts/OpenSans-Regular.ttf", 18);
+    font_36 = window->loadFont("res/fonts/OpenSans-Regular.ttf", 36);
+    font_72 = window->loadFont("res/fonts/OpenSans-Regular.ttf", 72);
 
-    //Create background effect while paused from a surface
-    SDL_Surface* surface = SDL_CreateRGBSurface(SDL_SWSURFACE, GAME_WIDTH, GAME_HEIGHT, 32, 0, 0, 0, 0);
+    //Create background texture for transition screens
+    SDL_Surface* surface = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 221, 221, 221));
+    background = SDL_CreateTextureFromSurface(window->getRenderer(), surface);
+    SDL_SetTextureBlendMode(background, SDL_BLENDMODE_BLEND);
+    SDL_FreeSurface(surface);
+
+    //Create background effect while the game is paused
+    surface = SDL_CreateRGBSurface(SDL_SWSURFACE, GAME_WIDTH, GAME_HEIGHT, 32, 0, 0, 0, 0);
     paused_shader = SDL_CreateTextureFromSurface(window->getRenderer(), surface);
     SDL_SetTextureBlendMode(paused_shader, SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(paused_shader, 32);
